@@ -1,2 +1,8 @@
-# ld-eda
-Liver diseases exploratory data analysis
+# Liver disease explorarory data analysis
+
+## Prerequisites
+
+```bash
+sudo snap install astral-uv --classic
+```
+
