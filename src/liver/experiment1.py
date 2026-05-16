@@ -2,6 +2,7 @@
 TODO: add docstring.
 Multiclass classification for indian dataset.
 """
+
 import json
 import numpy as np
 import pandas as pd
@@ -35,6 +36,7 @@ from Orange.evaluation import (
     Precision,
     CA,
     AUC,
+    MatthewsCorrCoefficient
 )
 
 from .load import load_csv, load_configuration
@@ -109,7 +111,7 @@ def create_learners(config):
     combos = get_combinations(random_forest)
     logger.debug(f"Random forest combinations: {len(combos)}")
     for combo in combos:
-        combo["class_weight"] = True
+        combo["class_weight"] = 'balanced'
         logger.debug(combo)
     rfs = [RandomForestLearner(**combo) for combo in combos]
     logger.debug(rfs)
@@ -123,19 +125,19 @@ def create_learners(config):
     trees = [TreeLearner(**combo) for combo in combos]
     logger.debug(trees)
 
-    # # 4) Gradient boosting
-    # gradient_boosting = config["gradient-boosting"]
-    # combos = get_combinations(gradient_boosting)
-    # logger.debug(f"Gradient boosting combinations: {len(combos)}")
-    # for combo in combos:
-    #     logger.debug(combo)
+    # 4) Gradient boosting
+    gradient_boosting = config["gradient-boosting"]
+    combos = get_combinations(gradient_boosting)
+    logger.debug(f"Gradient boosting combinations: {len(combos)}")
+    for combo in combos:
+        logger.debug(combo)
 
-    # # 5) Neural network
-    # neural_network = config["neural-network"]
-    # combos = get_combinations(neural_network)
-    # logger.debug(f"Neural network combinations: {len(combos)}")
-    # for combo in combos:
-    #     logger.debug(combo)
+    # 5) Neural network
+    neural_network = config["neural-network"]
+    combos = get_combinations(neural_network)
+    logger.debug(f"Neural network combinations: {len(combos)}")
+    for combo in combos:
+        logger.debug(combo)
 
     # 6) SVM
     # FIXME: kerner issues
@@ -149,8 +151,8 @@ def create_learners(config):
         "logistic-regression": lrs,
         "random-forest": rfs,
         "tree": trees,
-        # "gradient-boosting": gradient_boosting,
-        # "neural-network": neural_network,
+        "gradient-boosting": gradient_boosting,
+        "neural-network": neural_network,
         # "svm": svm,
     }
 
@@ -197,11 +199,11 @@ def evaluate(data, learners: list, preprocessor):
 
     metric_functions = {
         "CA": CA,
-        # "AUC": AUC,
-        # "Precision_weighted": lambda res: Precision(scores, average="weighted"),
-        # "Recall_weighted": lambda res: Recall(scores, average="weighted"),
-        # "F1_weighted": lambda res: F1(scores, average="weighted"),
-        # "MCC": MatthewsCorrCoefficient,
+        "AUC": AUC,
+        "Precision_weighted": lambda res: Precision(scores, average="weighted"),
+        "Recall_weighted": lambda res: Recall(scores, average="weighted"),
+        "F1_weighted": lambda res: F1(scores, average="weighted"),
+        "MCC": MatthewsCorrCoefficient,
     }
 
     rows = []
@@ -291,12 +293,20 @@ def main():
     # data = preprocessor(data)
 
     # 6) Evaluate
-    evaluate(data, learners["logistic-regression"], preprocessor)
-    # evaluate(
-    #     data,
-    #     [
-    #         LogisticRegressionLearner(C=0.1),
-    #         LogisticRegressionLearner(penalty='l1', C=0.1)
-    #     ],
-    #     preprocessor
-    # )
+    # logger.error(**learners.values())
+    # evaluate(data, learners.values(), preprocessor)
+
+    evaluate(
+        data,
+        learners["logistic-regression"] +
+        learners["random-forest"],
+        preprocessor
+    )
+    # evaluate(data, learners["random-forest"], preprocessor)
+
+    # FIXME: ValueError: Classification metrics can't handle a mix of multiclass and continuous targets
+    # evaluate(data, learners["tree"], preprocessor)
+    # evaluate(data, learners["gradient-boosting"], preprocessor)
+    # evaluate(data, learners["neural-network"], preprocessor)
+    # evaluate(data, learners["svm"], preprocessor)
+

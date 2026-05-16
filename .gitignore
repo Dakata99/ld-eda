@@ -1,6 +1,4 @@
 _delete-plot.py
-lsyncd.log
-lsyncd-status.log
 .venv
 .vscode
 src/liver_eda_project.egg-info

@@ -1,6 +1,12 @@
 #!/bin/bash
 
-# liver disease analysis
+# liver disease exploratory data analysis
+
+# Create virtual environment
 uv venv --prompt ld-eda --clear
+
+# Activate virtual environment
 source .venv/bin/activate
+
+# Install dependencies
 uv pip install -e .
