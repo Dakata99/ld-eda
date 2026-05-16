@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "liver-eda-project"
+version = "0.1.0"
+description = "Exploratory data analysis project using Orange3"
+requires-python = ">=3.10"
+
+dependencies = [
+    # Additional
+    "loguru",
+    "plotly",
+    "argcomplete",
+
+    # Core Orange3
+    "Orange3",
+]
+
+[project.scripts]
+liver = "liver.cli:main"
+
+[project.optional-dependencies]
+# Install with: pip install -e ".[dev]"
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.4",
+]
+ 
+# Install with: pip install -e ".[notebooks]"
+notebooks = [
+    "jupyter>=1.1",
+    "ipykernel>=6.29",
+]
+ 
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+ 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
