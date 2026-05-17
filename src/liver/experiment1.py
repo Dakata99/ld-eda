@@ -5,7 +5,9 @@ Multiclass classification for indian dataset.
 
 import json
 import numpy as np
+from sklearn.utils.multiclass import type_of_target
 import pandas as pd
+from Orange.data.pandas_compat import table_to_frame
 from loguru import logger
 from itertools import product
 
@@ -61,10 +63,6 @@ def transform(data):
     # Transform to new domain
     data = data.transform(domain)
 
-    # Rebuild Table with proper integer encoding (critical for Orange metrics)
-    # new_domain = Domain(data.domain.attributes, data.domain.class_var, data.domain.metas)
-    # data = Table(domain, data)
-
     info = {
         "target": str(data.domain.class_var),
         "labels": list(data.domain.class_var.values),
@@ -74,15 +72,15 @@ def transform(data):
     }
 
     logger.debug("Dataset info:\n{}", json.dumps(info, indent=2))
-
-    logger.error(f"Class variable: {data.domain.class_var}")
-    logger.error(f"Class variable type: {type(data.domain.class_var)}")
-    logger.error(f"Is discrete: {data.domain.class_var.is_discrete}")
-    logger.error(f"Is continuous: {data.domain.class_var.is_continuous}")
-    logger.error(f"Y dtype: {data.Y.dtype}")
-    logger.error(f"Unique Y values: {np.unique(data.Y)[:20]}")
+    logger.debug(f"Class variable: {data.domain.class_var}")
+    logger.debug(f"Class variable type: {type(data.domain.class_var)}")
+    logger.debug(f"Is discrete: {data.domain.class_var.is_discrete}")
+    logger.debug(f"Is continuous: {data.domain.class_var.is_continuous}")
+    logger.debug(f"Y dtype: {data.Y.dtype}")
+    logger.debug(f"Unique Y values: {np.unique(data.Y)[:20]}")
 
     return data
+
 
 def get_combinations(params):
     """TODO: add docstring."""
@@ -91,34 +89,35 @@ def get_combinations(params):
 
     return [dict(zip(keys, combo)) for combo in product(*values)]
 
+
 def create_learners(config):
     """TODO: add docstring."""
     # 1) Logistic regression
-    logistic_regression = config["logistic-regression"]
-    logger.info(logistic_regression)
+    configuration = config["logistic-regression"]
+    logger.info(configuration)
 
-    combos = get_combinations(logistic_regression)
+    combos = get_combinations(configuration)
     logger.debug(f"Logistic regression combinations: {len(combos)}")
     for combo in combos:
         combo["class_weight"] = 'balanced'
         logger.debug(combo)
 
-    lrs = [LogisticRegressionLearner(**combo) for combo in combos]
-    logger.debug(lrs)
+    logistic_regressions = [LogisticRegressionLearner(**combo) for combo in combos]
+    logger.debug(logistic_regressions)
 
     # 2) Random forest
-    random_forest = config["random-forest"]
-    combos = get_combinations(random_forest)
+    configuration = config["random-forest"]
+    combos = get_combinations(configuration)
     logger.debug(f"Random forest combinations: {len(combos)}")
     for combo in combos:
         combo["class_weight"] = 'balanced'
         logger.debug(combo)
-    rfs = [RandomForestLearner(**combo) for combo in combos]
-    logger.debug(rfs)
+    random_forests = [RandomForestLearner(**combo) for combo in combos]
+    logger.debug(random_forests)
 
     # 3) Tree
-    tree = config["tree"]
-    combos = get_combinations(tree)
+    configuration = config["tree"]
+    combos = get_combinations(configuration)
     logger.debug(f"Tree combinations: {len(combos)}")
     for combo in combos:
         logger.debug(combo)
@@ -126,50 +125,72 @@ def create_learners(config):
     logger.debug(trees)
 
     # 4) Gradient boosting
-    gradient_boosting = config["gradient-boosting"]
-    combos = get_combinations(gradient_boosting)
+    configuration = config["gradient-boosting"]
+    combos = get_combinations(configuration)
     logger.debug(f"Gradient boosting combinations: {len(combos)}")
     for combo in combos:
         logger.debug(combo)
+    gradient_boostings = [GBClassifier(**combo) for combo in combos]
+    logger.debug(gradient_boostings)
 
     # 5) Neural network
-    neural_network = config["neural-network"]
-    combos = get_combinations(neural_network)
+    configuration = config["neural-network"]
+    combos = get_combinations(configuration)
     logger.debug(f"Neural network combinations: {len(combos)}")
     for combo in combos:
         logger.debug(combo)
+    neural_networks = [NNClassificationLearner(**combo) for combo in combos]
+    logger.debug(neural_networks)
 
     # 6) SVM
     # FIXME: kerner issues
-    # svm = config["svm"]
-    # combos = get_combinations(svm)
-    # logger.debug(f"SVM combinations: {len(combos)}")
-    # for combo in combos:
-    #     logger.debug(combo)
+    configuration = config["svm"]
+    combos = get_combinations(configuration)
+    logger.debug(f"SVM combinations: {len(combos)}")
+    for combo in combos:
+        logger.debug(combo)
+    svms = [SVMLearner(**combo) for combo in combos]
+    logger.debug(svms)
 
     return {
-        "logistic-regression": lrs,
-        "random-forest": rfs,
+        "logistic-regression": logistic_regressions,
+        "random-forest": random_forests,
         "tree": trees,
-        "gradient-boosting": gradient_boosting,
-        "neural-network": neural_network,
-        # "svm": svm,
+        "gradient-boosting": gradient_boostings,
+        "neural-network": neural_networks,
+        "svm": svms,
     }
 
 
 def evaluate(data, learners: list, preprocessor):
+    """TODO: add docstring."""
+    # Split the data into train and test sets (80% train, 20% test, stratified, random state for reproducibility)
     train, test = sample(data, n=0.8, stratified=True, random_state=42)
+
+    # Evaluate using TestOnTestData (train on train set, test on test set)
     scores = TestOnTestData(
         train_data=train,
         test_data=test,
         learners=learners,
-        preprocessor=preprocessor
+        preprocessor=preprocessor,
+        store_data=True
     )
     # scores = CrossValidation(data, learners["logistic-regression"], k=5)
     logger.debug(scores)
 
-    import numpy as np
-    from sklearn.utils.multiclass import type_of_target
+    # TODO: check if this is valuable
+    # # This adds predictions, probabilities, and fold index to a Table
+    # augmented = scores.get_augmented_data(
+    #     # model_names=learners.keys(),
+    #     model_names=[learner.name for learner in learners],
+    #     include_attrs=True,
+    #     include_predictions=True,
+    #     include_probabilities=True,
+    # )
+    # df = table_to_frame(augmented)
+    # logger.info(df.head())
+    # Save like any Orange Table
+    # augmented.save("augmented_predictions.csv")
 
     logger.error("Actual shape: {}", scores.actual.shape)
     logger.error("Actual type_of_target: {}", type_of_target(scores.actual))
@@ -223,41 +244,9 @@ def evaluate(data, learners: list, preprocessor):
 
     print(df.to_string(index=False))
 
-    # # Use sklearn metrics with proper data extraction
-    # import numpy as np
-    # from sklearn.metrics import recall_score, precision_score, f1_score, accuracy_score
-    
-    # y_test = scores.actual.ravel()
-    
-    # results = []
-    # for i, learner in enumerate(learners["logistic-regression"]):
-    #     # Extract class predictions from probabilities (argmax)
-    #     y_pred = np.argmax(scores.probabilities[i], axis=1)
-        
-    #     # Ensure both are same type
-    #     y_test_int = y_test.astype(int)
-    #     y_pred_int = y_pred.astype(int)
-        
-    #     recall = recall_score(y_test_int, y_pred_int, average='macro', zero_division=0)
-    #     precision = precision_score(y_test_int, y_pred_int, average='macro', zero_division=0)
-    #     f1 = f1_score(y_test_int, y_pred_int, average='macro', zero_division=0)
-    #     accuracy = accuracy_score(y_test_int, y_pred_int)
-        
-    #     results.append({
-    #         'learner': str(learner),
-    #         'accuracy': accuracy,
-    #         'recall': recall,
-    #         'precision': precision,
-    #         'f1': f1
-    #     })
-    #     logger.info(f"Learner {i}: Accuracy={accuracy:.4f}, Recall={recall:.4f}, Precision={precision:.4f}, F1={f1:.4f}")
-    
-    # logger.debug(f"All results: {results}")
-
 
 def main():
     """TODO: write docstring."""
-
     logger.info('Running experiment 1: multiclass classification for indian dataset')
 
     # 1) Load the dataset (CSV file)
@@ -273,7 +262,7 @@ def main():
     logger.warning(f"Y dtype: {data.Y.dtype}")
     logger.warning(f"Y unique values: {set(data.Y.ravel())}")
 
-    # 3)
+    # 3) Load configuration and create learners
     config = load_configuration()
     learners = create_learners(config)
 
@@ -282,10 +271,14 @@ def main():
     # 4) Split
 
     # 5) Preprocess
-    preprocessor = PreprocessorList(preprocessors=(
-            Impute(method=Average()), # Average/Most frequent
-            Continuize(multinomial_treatment=Continuize.Indicators), # One-hot encoding/One feature per value
-            Normalize(norm_type=Normalize.NormalizeBySD) # Standardization (z-score normalization)
+    preprocessor = PreprocessorList(
+        preprocessors=(
+            # Average/Most frequent
+            Impute(method=Average()),
+            # One-hot encoding/One feature per value
+            Continuize(multinomial_treatment=Continuize.Indicators),
+            # Standardization (z-score normalization)
+            Normalize(norm_type=Normalize.NormalizeBySD)
         )
     )
 
@@ -293,20 +286,13 @@ def main():
     # data = preprocessor(data)
 
     # 6) Evaluate
-    # logger.error(**learners.values())
-    # evaluate(data, learners.values(), preprocessor)
-
     evaluate(
         data,
-        learners["logistic-regression"] +
-        learners["random-forest"],
+        learners["logistic-regression"],# +
+        # learners["random-forest"] +
+        # learners["tree"] +
+        # learners["gradient-boosting"] +
+        # learners["neural-network"] +
+        # learners["svm"],
         preprocessor
     )
-    # evaluate(data, learners["random-forest"], preprocessor)
-
-    # FIXME: ValueError: Classification metrics can't handle a mix of multiclass and continuous targets
-    # evaluate(data, learners["tree"], preprocessor)
-    # evaluate(data, learners["gradient-boosting"], preprocessor)
-    # evaluate(data, learners["neural-network"], preprocessor)
-    # evaluate(data, learners["svm"], preprocessor)
-
