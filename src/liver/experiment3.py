@@ -7,32 +7,30 @@ import json
 import numpy as np
 import collections
 from loguru import logger
+import pandas as pd
 
+from .load import load_dataset, load_configuration
+from .utils import create_learners, dataset_report, profiler
 
-from .load import load_csv, load_configuration
-from .utils import create_learners
-
-from Orange.preprocess import (
-    PreprocessorList,
-    Impute,
-    Average,
-    Continuize,
-    Normalize
-)
+from Orange.preprocess import PreprocessorList, Impute, Average, Continuize, Normalize
 
 import numpy as np
 from Orange.data import Domain, StringVariable, Table, DiscreteVariable
+from Orange.evaluation.testing import CrossValidation, TestOnTestData, sample
+from Orange.evaluation import Recall, F1, Precision, CA, AUC, MatthewsCorrCoefficient
+
 
 class EditDomain:
     def __init__(self):
         pass
 
-    def remap(self,
-              data: Table,
-              attribute: str,
-              mapping: dict[str, str],
-              new_attr_name: str | None = None
-              ):
+    def remap(
+        self,
+        data: Table,
+        attribute: str,
+        mapping: dict[str, str],
+        new_attr_name: str | None = None,
+    ):
         """
         Remap values of a discrete attribute/feature.
 
@@ -74,9 +72,7 @@ class EditDomain:
         old_col = X_new[:, col_index].copy()
         new_col = np.full(len(data), np.nan, dtype=float)
 
-        label_to_new_index = {
-            label: i for i, label in enumerate(new_labels)
-        }
+        label_to_new_index = {label: i for i, label in enumerate(new_labels)}
 
         for old_index, old_label in enumerate(old_values):
             mapped_label = mapping.get(old_label, old_label)
@@ -145,25 +141,23 @@ class EditDomain:
         old_class = data.domain.class_var
 
         new_class = DiscreteVariable(
-            name=new_name,          # new name
-            values=old_class.values  # keep same values
+            name=new_name,  # new name
+            values=old_class.values,  # keep same values
         )
 
         new_domain = Domain(data.domain.attributes, new_class, data.domain.metas)
 
         # Reuse X, Y and metas directly — no transform needed
         data = Table.from_numpy(
-            new_domain,
-            data.X,
-            data.Y,
-            data.metas if data.domain.metas else None
+            new_domain, data.X, data.Y, data.metas if data.domain.metas else None
         )
 
         # Verify
         print(data.domain.class_var)  # Disease
-        print(data.Y[:5])             # same values as before
+        print(data.Y[:5])  # same values as before
 
         return data
+
 
 class Concatenate:
     def __init__(self):
@@ -180,8 +174,7 @@ class Concatenate:
 
         # Keep original order from first table, filtered to common
         common_vars = [
-            var for var in datasets[0].domain.attributes
-            if var.name in common_attrs
+            var for var in datasets[0].domain.attributes if var.name in common_attrs
         ]
 
         # Build new domain with source meta
@@ -191,7 +184,7 @@ class Concatenate:
         all_meta_vars = []
         meta_var_names = set()
         for dataset in datasets:
-            for meta_var in (dataset.domain.metas or ()):
+            for meta_var in dataset.domain.metas or ():
                 if meta_var.name not in meta_var_names:
                     all_meta_vars.append(meta_var)
                     meta_var_names.add(meta_var.name)
@@ -199,9 +192,7 @@ class Concatenate:
         # Build final domain with all original metas + source
         final_metas = tuple(all_meta_vars) + (source_meta,)
         new_domain = Domain(
-            common_vars,
-            datasets[0].domain.class_var,
-            metas=final_metas
+            common_vars, datasets[0].domain.class_var, metas=final_metas
         )
 
         transformed = []
@@ -217,7 +208,11 @@ class Concatenate:
             for meta_var in all_meta_vars:
                 if meta_var in table.domain.metas:
                     col_idx = list(table.domain.metas).index(meta_var)
-                    metas_list.append(aligned.metas[:, col_idx:col_idx+1] if aligned.metas.shape[1] > 0 else np.full((len(aligned), 1), None, dtype=object))
+                    metas_list.append(
+                        aligned.metas[:, col_idx : col_idx + 1]
+                        if aligned.metas.shape[1] > 0
+                        else np.full((len(aligned), 1), None, dtype=object)
+                    )
                 else:
                     metas_list.append(np.full((len(aligned), 1), None, dtype=object))
 
@@ -234,8 +229,11 @@ class Concatenate:
 
         # --- 4. Concatenate all ---
         result = Table.concatenate(transformed, axis=0)
-        print(f"Result shape: {len(result)} rows x {len(result.domain.attributes)} features")
+        print(
+            f"Result shape: {len(result)} rows x {len(result.domain.attributes)} features"
+        )
         return result
+
 
 def transform(data, target: str):
     """TODO: add docstring."""
@@ -244,16 +242,9 @@ def transform(data, target: str):
     assert isinstance(target, DiscreteVariable), "Target variable must be discrete!"
     logger.debug(data.domain)
 
-    features = [
-        attr for attr in data.domain.attributes
-        if attr.name != target.name
-    ]
+    features = [attr for attr in data.domain.attributes if attr.name != target.name]
 
-    domain = Domain(
-        attributes=features,
-        class_vars=target,
-        metas=data.domain.metas
-    )
+    domain = Domain(attributes=features, class_vars=target, metas=data.domain.metas)
 
     # Transform to new domain
     data = data.transform(domain)
@@ -277,50 +268,141 @@ def transform(data, target: str):
     return data
 
 
+@profiler
+def evaluate(data, learners: list, preprocessor):
+    """TODO: add docstring."""
+    # Split the data into train and test sets (80% train, 20% test, stratified, random state for reproducibility)
+    train, test = sample(data, n=0.8, stratified=True, random_state=42)
+
+    def progress_callback(progress: float) -> None:
+        done = round(progress * len(learners))
+        logger.info(
+            "Finished {}/{} learners ({:.2f}%)",
+            done,
+            len(learners),
+            progress * 100,
+        )
+
+    # Evaluate using TestOnTestData (train on train set, test on test set)
+    evaluator = TestOnTestData(
+        store_data=False
+    )  # set store_data to True if we want to keep the augmented data with predictions, probabilities, etc.
+    # CrossValidation(store_data=False, k=5)
+    scores = evaluator(
+        train,
+        test,
+        learners,
+        preprocessor=preprocessor,
+        callback=progress_callback,
+    )
+    logger.debug(scores)
+
+    # logger.error("Actual shape: {}", scores.actual.shape)
+    # logger.error("Actual type_of_target: {}", type_of_target(scores.actual))
+    # logger.error("Actual unique: {}", np.unique(scores.actual))
+
+    # logger.error("Predicted full shape: {}", scores.predicted.shape)
+
+    # for i, learner in enumerate(learners):
+    #     y_pred = scores.predicted[i]
+
+    #     logger.error("=" * 80)
+    #     logger.error("Learner: {}", repr(learner))
+    #     logger.error("Prediction shape: {}", y_pred.shape)
+    #     logger.error("Prediction dtype: {}", y_pred.dtype)
+    #     logger.error("Prediction type_of_target: {}", type_of_target(y_pred))
+    #     logger.error("Prediction first 20: {}", y_pred[:20])
+    #     logger.error("Prediction unique first 30: {}", np.unique(y_pred)[:30])
+
+    #     is_integer_like = np.all(np.isclose(y_pred, np.rint(y_pred)))
+    #     logger.error("Prediction is integer-like: {}", is_integer_like)
+
+    logger.debug(f"CA: {CA(scores)}")
+    logger.debug(f"AUC: {AUC(scores)}")
+    logger.debug(f"F1: {F1(scores)}")
+    logger.debug(f"Precision: {Precision(scores)}")
+    logger.debug(f"Recall: {Recall(scores)}")
+
+    metrics = {
+        "CA": CA,
+        "AUC": AUC,
+        "Precision": Precision,
+        "Recall": Recall,
+        "F1": F1,
+        "MCC": MatthewsCorrCoefficient,
+    }
+
+    # Write results into a CSV file
+    rows = []
+
+    # Loop through learners
+    for i, learner in enumerate(learners):
+        row = {"Learner": repr(learner)}
+
+        for name, metric in metrics.items():
+            values = metric(scores)
+            row[name] = values[i]
+
+        rows.append(row)
+
+    df = pd.DataFrame(rows)
+    logger.success(df.to_string(index=False))
+    df.to_csv("evaluation_results.csv", index=False)
+
+
 def main():
     """TODO: write docstring."""
-    logger.info('Running experiment 3: binary classification for all 3 datasets')
+    logger.info("Running experiment 3: binary classification for all 3 datasets")
 
     # 1) Load the dataset (CSV file)
-    indian = load_csv('indian')
-    hcv = load_csv('hcv')
-    liver = load_csv('liver')
+    # indian = load_dataset('indian')
+    # hcv = load_dataset('hcv')
+    # liver = load_dataset('liver')
+    data = load_dataset("expr3")
+    dataset_report(
+        data,
+        preview_rows=10,
+        show_all_features=True,
+        show_all_metas=True,
+        show_numeric_stats=True,
+        show_discrete_stats=True,
+    )
 
-    indian = transform(indian, target="Liver_Disease_Type")
-    hcv = transform(hcv, target="Category")
-    liver = transform(liver, target="Result")
+    # indian = transform(indian, target="Liver_Disease_Type")
+    # hcv = transform(hcv, target="Category")
+    # liver = transform(liver, target="Result")
 
-    logger.warning(f"Indian dataset shape: {indian.domain.class_var}, {len(indian)} rows, {len(indian.domain.attributes)} features")
-    logger.warning(f"HCV dataset shape: {hcv.domain.class_var}, {len(hcv)} rows, {len(hcv.domain.attributes)} features")
-    logger.warning(f"Liver dataset shape: {liver.domain.class_var}, {len(liver)} rows, {len(liver.domain.attributes)} features")
+    # logger.warning(f"Indian dataset shape: {indian.domain.class_var}, {len(indian)} rows, {len(indian.domain.attributes)} features")
+    # logger.warning(f"HCV dataset shape: {hcv.domain.class_var}, {len(hcv)} rows, {len(hcv.domain.attributes)} features")
+    # logger.warning(f"Liver dataset shape: {liver.domain.class_var}, {len(liver)} rows, {len(liver.domain.attributes)} features")
 
-    ed = EditDomain()
-    indian = ed.rename_target(indian, new_name="Condition")
-    hcv = ed.rename_target(hcv, new_name="Condition")
-    liver = ed.rename_target(liver, new_name="Condition")
+    # ed = EditDomain()
+    # indian = ed.rename_target(indian, new_name="Condition")
+    # hcv = ed.rename_target(hcv, new_name="Condition")
+    # liver = ed.rename_target(liver, new_name="Condition")
 
-    logger.warning(f"Indian dataset shape: {indian.domain.class_var}, {len(indian)} rows, {len(indian.domain.attributes)} features")
-    logger.warning(f"HCV dataset shape: {hcv.domain.class_var}, {len(hcv)} rows, {len(hcv.domain.attributes)} features")
-    logger.warning(f"Liver dataset shape: {liver.domain.class_var}, {len(liver)} rows, {len(liver.domain.attributes)} features")
+    # logger.warning(f"Indian dataset shape: {indian.domain.class_var}, {len(indian)} rows, {len(indian.domain.attributes)} features")
+    # logger.warning(f"HCV dataset shape: {hcv.domain.class_var}, {len(hcv)} rows, {len(hcv.domain.attributes)} features")
+    # logger.warning(f"Liver dataset shape: {liver.domain.class_var}, {len(liver)} rows, {len(liver.domain.attributes)} features")
 
-    indian.save("indian-before.csv")
-    hcv.save("hcv-before.csv")
-    liver.save("liver-before.csv")
+    # indian.save("indian-before.csv")
+    # hcv.save("hcv-before.csv")
+    # liver.save("liver-before.csv")
 
-    # indian = ed.rename
-    # liver = ed.rename(liver, mapping={"Age of the patient": "Age"})
-    liver = ed.rename(liver, mapping={"Gender of the patient": "Gender"})
-    hcv = ed.rename(hcv, mapping={"Sex": "Gender"})
-    hcv = ed.remap(hcv, attribute="Gender", mapping={"m": "Male", "f": "Female"})
+    # # indian = ed.rename
+    # # liver = ed.rename(liver, mapping={"Age of the patient": "Age"})
+    # liver = ed.rename(liver, mapping={"Gender of the patient": "Gender"})
+    # hcv = ed.rename(hcv, mapping={"Sex": "Gender"})
+    # hcv = ed.remap(hcv, attribute="Gender", mapping={"m": "Male", "f": "Female"})
 
-    indian.save("indian-after.csv")
-    hcv.save("hcv-after.csv")
-    liver.save("liver-after.csv")
+    # indian.save("indian-after.csv")
+    # hcv.save("hcv-after.csv")
+    # liver.save("liver-after.csv")
 
     # 2) Load configuration and create learners
-    # config = load_configuration()
-    # learners = create_learners(config)
-    # logger.debug(learners)
+    config = load_configuration()
+    learners = create_learners(config)
+    logger.debug(learners)
 
     # 3) Do transformation
     # TODO: INSTEAD OF DOING THIS, JUST EXPORT THE DATA FROM ORANGE WITH THE MAPPED VALUES.
@@ -329,20 +411,30 @@ def main():
     # 3.1) Edit Domain of datasets
 
     # 3.2) Concatenate datasets
-    concat = Concatenate()
-    data = concat(
-        [indian, hcv, liver],
-        source_names=["Indian", "HCV", "Liver"]
-    )
-    logger.debug(f"Concatenated data shape: {data.X.shape}")
+    # concat = Concatenate()
+    # data = concat(
+    #     [indian, hcv, liver],
+    #     source_names=["Indian", "HCV", "Liver"]
+    # )
+    # logger.debug(f"Concatenated data shape: {data.X.shape}")
 
     # Check source meta
-    sources = [str(row["Source"]) for row in data]
-    logger.debug(collections.Counter(sources))
-    # e.g. {'dataset_a': 68000, 'dataset_b': 52000, 'dataset_c': 47000}
+    # sources = [str(row["Source"]) for row in data]
+    # logger.debug(collections.Counter(sources))
+    # # e.g. {'dataset_a': 68000, 'dataset_b': 52000, 'dataset_c': 47000}
 
-    # Save
-    data.save("merged.csv")
+    # # Save
+    # data.save("merged.csv")
+
+    # data = transform(data, target="Condition")
+    # dataset_report(
+    #     data,
+    #     preview_rows=10,
+    #     show_all_features=True,
+    #     show_all_metas=True,
+    #     show_numeric_stats=True,
+    #     show_discrete_stats=True,
+    # )
 
     # 4) Split
 
@@ -354,7 +446,7 @@ def main():
             # One-hot encoding/One feature per value
             Continuize(multinomial_treatment=Continuize.Indicators),
             # Standardization (z-score normalization)
-            Normalize(norm_type=Normalize.NormalizeBySD)
+            Normalize(norm_type=Normalize.NormalizeBySD),
         )
     )
 
@@ -362,3 +454,13 @@ def main():
     # data = preprocessor(data)
 
     # 6) Evaluate
+    evaluate(
+        data,
+        learners["logistic-regression"]
+        + learners["random-forest"]
+        + learners["tree"]
+        + learners["gradient-boosting"]
+        + learners["neural-network"]
+        + learners["svm"],
+        preprocessor,
+    )

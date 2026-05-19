@@ -1,6 +1,7 @@
 import argparse
 import argcomplete
 
+
 def setup_logging(debug: bool = False) -> None:
     import sys
     from loguru import logger
@@ -10,6 +11,7 @@ def setup_logging(debug: bool = False) -> None:
         sys.stderr,
         level="DEBUG" if debug else "INFO",
     )
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -23,4 +25,5 @@ def main():
 
     # Run the analysis for the specified experiment
     from .core import run_analysis
+
     run_analysis(args.experiment)

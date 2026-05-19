@@ -1,4 +1,3 @@
-
 @dataclass
 class Learner:
     name: str
@@ -9,10 +8,10 @@ class Learner:
     def build(self) -> ClassifierMixin:
         self._model = self.cls(**self.params)
         return self._model
-    
+
     @property
     def id(self) -> str:
         return f"{self.name}({', '.join(f'{k}={v}' for k, v in self.params.items())})"
-    
+
     def __repr__(self) -> str:
         return f"Learner {self.id}"

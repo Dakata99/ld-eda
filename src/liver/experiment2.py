@@ -2,6 +2,7 @@
 TODO: add docstring.
 Binary classification for indian dataset.
 """
+
 import json
 import numpy as np
 from sklearn.utils.multiclass import type_of_target
@@ -9,41 +10,26 @@ import pandas as pd
 from Orange.data.pandas_compat import table_to_frame
 from loguru import logger
 
-from Orange.data import (
-    Domain,
-    Table,
-    DiscreteVariable
-)
-from Orange.preprocess import (
-    PreprocessorList,
-    Impute,
-    Average,
-    Continuize,
-    Normalize
-)
+from Orange.data import Domain, Table, DiscreteVariable
+from Orange.preprocess import PreprocessorList, Impute, Average, Continuize, Normalize
 from Orange.evaluation.testing import CrossValidation, TestOnTestData, sample
-from Orange.evaluation import (
-    Recall,
-    F1,
-    Precision,
-    CA,
-    AUC,
-    MatthewsCorrCoefficient
-)
+from Orange.evaluation import Recall, F1, Precision, CA, AUC, MatthewsCorrCoefficient
 
-from .load import load_csv, load_configuration
-from .utils import create_learners, profiler
+from .load import load_dataset, load_configuration
+from .utils import create_learners, dataset_report, profiler
+
 
 class EditDomain:
     def __init__(self):
         pass
 
-    def remap(self,
-              data: Table,
-              attribute: str,
-              mapping: dict[str, str],
-              new_attr_name: str | None = None
-              ):
+    def remap(
+        self,
+        data: Table,
+        attribute: str,
+        mapping: dict[str, str],
+        new_attr_name: str | None = None,
+    ):
         """
         Remap values of a discrete attribute/feature.
 
@@ -85,9 +71,7 @@ class EditDomain:
         old_col = X_new[:, col_index].copy()
         new_col = np.full(len(data), np.nan, dtype=float)
 
-        label_to_new_index = {
-            label: i for i, label in enumerate(new_labels)
-        }
+        label_to_new_index = {label: i for i, label in enumerate(new_labels)}
 
         for old_index, old_label in enumerate(old_values):
             mapped_label = mapping.get(old_label, old_label)
@@ -123,16 +107,9 @@ def transform(data):
     assert isinstance(target, DiscreteVariable), "Target variable must be discrete!"
     logger.debug(data.domain)
 
-    features = [
-        attr for attr in data.domain.attributes
-        if attr.name != target.name
-    ]
+    features = [attr for attr in data.domain.attributes if attr.name != target.name]
 
-    domain = Domain(
-        attributes=features,
-        class_vars=target,
-        metas=data.domain.metas
-    )
+    domain = Domain(attributes=features, class_vars=target, metas=data.domain.metas)
 
     # Transform to new domain
     data = data.transform(domain)
@@ -155,6 +132,7 @@ def transform(data):
 
     return data
 
+
 @profiler
 def evaluate(data, learners: list, preprocessor):
     """TODO: add docstring."""
@@ -171,7 +149,9 @@ def evaluate(data, learners: list, preprocessor):
         )
 
     # Evaluate using TestOnTestData (train on train set, test on test set)
-    evaluator = TestOnTestData(store_data=False) # set store_data to True if we want to keep the augmented data with predictions, probabilities, etc.
+    evaluator = TestOnTestData(
+        store_data=False
+    )  # set store_data to True if we want to keep the augmented data with predictions, probabilities, etc.
     # CrossValidation(store_data=False, k=5)
     scores = evaluator(
         train,
@@ -222,9 +202,7 @@ def evaluate(data, learners: list, preprocessor):
 
     # Loop through learners
     for i, learner in enumerate(learners):
-        row = {
-            "Learner": repr(learner)
-        }
+        row = {"Learner": repr(learner)}
 
         for name, metric in metrics.items():
             values = metric(scores)
@@ -239,15 +217,22 @@ def evaluate(data, learners: list, preprocessor):
 
 def main():
     """TODO: write docstring."""
-    logger.info('Running experiment 2: binary classification for indian dataset')
+    logger.info("Running experiment 2: binary classification for indian dataset")
 
     # 1) Load the dataset (CSV file)
-    data = load_csv('indian')
+    data = load_dataset("expr2")
+    dataset_report(
+        data,
+        preview_rows=10,
+        show_all_features=True,
+        show_all_metas=True,
+        show_numeric_stats=True,
+        show_discrete_stats=True,
+    )
 
     # 2) Load configuration and create learners
     config = load_configuration()
     learners = create_learners(config)
-
     logger.debug(learners)
 
     # 3) Do transformation
@@ -255,20 +240,28 @@ def main():
     # THIS IS A LOT OF WORK AND CAN BE ERROR-PRONE.
     # ALSO, THIS IS NOT REALLY THE FOCUS OF THE EXPERIMENT, SO IT'S BETTER TO JUST PREPARE THE DATA IN ORANGE AND THEN LOAD IT HERE.
     # TODO: export the data in .tab or .pkl file, so we can load it here and directly know which is the target variable, which are the features, etc. without having to do all this transformation and remapping here.
-    ed = EditDomain()
-    data = ed.remap(
-        data=data,
-        attribute="Liver_Disease_Type",
-        mapping={
-            'Normal': 'Healthy',
-            'Alcoholic_Liver_Disease': 'Sick',
-            'Cirrhosis': 'Sick',
-            'Fatty_Liver': 'Sick',
-            'Hepatitis_B': 'Sick',
-            'Hepatitis_C': 'Sick',
-        }
-    )
-    data = transform(data)
+    # ed = EditDomain()
+    # data = ed.remap(
+    #     data=data,
+    #     attribute="Liver_Disease_Type",
+    #     mapping={
+    #         'Normal': 'Healthy',
+    #         'Alcoholic_Liver_Disease': 'Sick',
+    #         'Cirrhosis': 'Sick',
+    #         'Fatty_Liver': 'Sick',
+    #         'Hepatitis_B': 'Sick',
+    #         'Hepatitis_C': 'Sick',
+    #     }
+    # )
+    # data = transform(data)
+    # dataset_report(
+    #     data,
+    #     preview_rows=10,
+    #     show_all_features=True,
+    #     show_all_metas=True,
+    #     show_numeric_stats=True,
+    #     show_discrete_stats=True,
+    # )
 
     # 4) Split
 
@@ -280,7 +273,7 @@ def main():
             # One-hot encoding/One feature per value
             Continuize(multinomial_treatment=Continuize.Indicators),
             # Standardization (z-score normalization)
-            Normalize(norm_type=Normalize.NormalizeBySD)
+            Normalize(norm_type=Normalize.NormalizeBySD),
         )
     )
 
@@ -290,11 +283,11 @@ def main():
     # 6) Evaluate
     evaluate(
         data,
-        learners["logistic-regression"] +
-        learners["random-forest"] +
-        learners["tree"] +
-        learners["gradient-boosting"] +
-        learners["neural-network"] +
-        learners["svm"],
-        preprocessor
+        learners["logistic-regression"]
+        + learners["random-forest"]
+        + learners["tree"]
+        + learners["gradient-boosting"]
+        + learners["neural-network"]
+        + learners["svm"],
+        preprocessor,
     )

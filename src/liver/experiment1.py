@@ -11,30 +11,14 @@ from Orange.data.pandas_compat import table_to_frame
 from loguru import logger
 from functools import partial
 
-from Orange.data import (
-    Domain,
-    Table,
-    DiscreteVariable
-)
-from Orange.preprocess import (
-    PreprocessorList,
-    Impute,
-    Average,
-    Continuize,
-    Normalize
-)
+from Orange.data import Domain, Table, DiscreteVariable
+from Orange.preprocess import PreprocessorList, Impute, Average, Continuize, Normalize
 from Orange.evaluation.testing import CrossValidation, TestOnTestData, sample
-from Orange.evaluation import (
-    Recall,
-    F1,
-    Precision,
-    CA,
-    AUC,
-    MatthewsCorrCoefficient
-)
+from Orange.evaluation import Recall, F1, Precision, CA, AUC, MatthewsCorrCoefficient
 
-from .load import load_csv, load_configuration
-from .utils import create_learners, profiler
+from .load import load_dataset, load_configuration
+from .utils import create_learners, dataset_report, profiler
+
 
 def transform(data):
     """TODO: add docstring."""
@@ -43,15 +27,8 @@ def transform(data):
     assert isinstance(target, DiscreteVariable), "Target variable must be discrete!"
     logger.debug(data.domain)
 
-    features = [
-        attr for attr in data.domain.attributes
-        if attr.name != target.name
-    ]
-    domain = Domain(
-        attributes=features,
-        class_vars=target,
-        metas=data.domain.metas
-    )
+    features = [attr for attr in data.domain.attributes if attr.name != target.name]
+    domain = Domain(attributes=features, class_vars=target, metas=data.domain.metas)
 
     # Transform to new domain
     data = data.transform(domain)
@@ -74,6 +51,7 @@ def transform(data):
 
     return data
 
+
 @profiler
 def evaluate(data, learners: list, preprocessor):
     """TODO: add docstring."""
@@ -90,7 +68,9 @@ def evaluate(data, learners: list, preprocessor):
         )
 
     # Evaluate using TestOnTestData (train on train set, test on test set)
-    evaluator = TestOnTestData(store_data=False) # set store_data to True if we want to keep the augmented data with predictions, probabilities, etc.
+    evaluator = TestOnTestData(
+        store_data=False
+    )  # set store_data to True if we want to keep the augmented data with predictions, probabilities, etc.
     # CrossValidation(store_data=False, k=5)
     scores = evaluator(
         train,
@@ -99,27 +79,6 @@ def evaluate(data, learners: list, preprocessor):
         preprocessor=preprocessor,
         callback=progress_callback,
     )
-    logger.debug(scores)
-
-    # logger.error("Actual shape: {}", scores.actual.shape)
-    # logger.error("Actual type_of_target: {}", type_of_target(scores.actual))
-    # logger.error("Actual unique: {}", np.unique(scores.actual))
-
-    # logger.error("Predicted full shape: {}", scores.predicted.shape)
-
-    # for i, learner in enumerate(learners):
-    #     y_pred = scores.predicted[i]
-
-    #     logger.error("=" * 80)
-    #     logger.error("Learner: {}", repr(learner))
-    #     logger.error("Prediction shape: {}", y_pred.shape)
-    #     logger.error("Prediction dtype: {}", y_pred.dtype)
-    #     logger.error("Prediction type_of_target: {}", type_of_target(y_pred))
-    #     logger.error("Prediction first 20: {}", y_pred[:20])
-    #     logger.error("Prediction unique first 30: {}", np.unique(y_pred)[:30])
-
-    #     is_integer_like = np.all(np.isclose(y_pred, np.rint(y_pred)))
-    #     logger.error("Prediction is integer-like: {}", is_integer_like)
 
     logger.debug(f"CA: {CA(scores)}")
     logger.debug(f"AUC: {AUC(scores)}")
@@ -141,9 +100,7 @@ def evaluate(data, learners: list, preprocessor):
 
     # Loop through learners
     for i, learner in enumerate(learners):
-        row = {
-            "Learner": repr(learner)
-        }
+        row = {"Learner": repr(learner)}
 
         for name, metric in metrics.items():
             values = metric(scores)
@@ -155,12 +112,21 @@ def evaluate(data, learners: list, preprocessor):
     logger.success(df.to_string(index=False))
     df.to_csv("evaluation_results.csv", index=False)
 
+
 def main():
     """TODO: write docstring."""
-    logger.info('Running experiment 1: multiclass classification for indian dataset')
+    logger.info("Running experiment 1: multiclass classification for indian dataset")
 
     # 1) Load the dataset (CSV file)
-    data = load_csv('indian')
+    data = load_dataset("expr1")
+    dataset_report(
+        data,
+        preview_rows=10,
+        show_all_features=True,
+        show_all_metas=True,
+        show_numeric_stats=True,
+        show_discrete_stats=True,
+    )
 
     # 2) Load configuration and create learners
     config = load_configuration()
@@ -168,14 +134,15 @@ def main():
     logger.debug(learners)
 
     # 3) Do transformation
-    data = transform(data)
-
-    # DEBUG: Check target variable type
-    logger.debug(f"Target variable: {data.domain.class_var}")
-    logger.debug(f"Target type: {type(data.domain.class_var)}")
-    logger.debug(f"Target values: {data.domain.class_var.values if hasattr(data.domain.class_var, 'values') else 'N/A'}")
-    logger.debug(f"Y dtype: {data.Y.dtype}")
-    logger.debug(f"Y unique values: {set(data.Y.ravel())}")
+    # data = transform(data)
+    # dataset_report(
+    #     data,
+    #     preview_rows=10,
+    #     show_all_features=True,
+    #     show_all_metas=True,
+    #     show_numeric_stats=True,
+    #     show_discrete_stats=True,
+    # )
 
     # 4) Split (here?)
 
@@ -187,7 +154,7 @@ def main():
             # One-hot encoding/One feature per value
             Continuize(multinomial_treatment=Continuize.Indicators),
             # Standardization (z-score normalization)
-            Normalize(norm_type=Normalize.NormalizeBySD)
+            Normalize(norm_type=Normalize.NormalizeBySD),
         )
     )
 
@@ -199,11 +166,11 @@ def main():
     # TODO: may be try to use a common wrapper for evaluation (check TestAndScore in experiment.py)
     evaluate(
         data,
-        learners["logistic-regression"] +
-        learners["random-forest"] +
-        learners["tree"] +
-        learners["gradient-boosting"] +
-        learners["neural-network"] +
-        learners["svm"],
-        preprocessor
+        learners["logistic-regression"]
+        + learners["random-forest"]
+        + learners["tree"]
+        + learners["gradient-boosting"]
+        + learners["neural-network"]
+        + learners["svm"],
+        preprocessor,
     )

@@ -8,13 +8,18 @@ from Orange.data import Table
 # TODO: change this path!
 DATASETS_PATH: Path = root("datasets")
 DATASETS: dict[str, str] = {
-    'indian': DATASETS_PATH / "indian-liver-disease-dataset/Training_indian_liver_disease_dataset.csv",
-    'hcv': DATASETS_PATH / "hcv-data/hcvdat0.csv",
-    'liver': DATASETS_PATH / "liver-data/cleaned_data.csv",
+    "indian": DATASETS_PATH
+    / "indian-liver-disease-dataset/Training_indian_liver_disease_dataset.csv",
+    "hcv": DATASETS_PATH / "hcv-data/hcvdat0.csv",
+    "liver": DATASETS_PATH / "liver-data/cleaned_data.csv",
+    "expr1": DATASETS_PATH / "expr1.tab",
+    "expr2": DATASETS_PATH / "expr2.tab",
+    "expr3": DATASETS_PATH / "expr3.tab",
 }
 
-def load_csv(dataset: str) -> Table:
-    """Load CSV file for the specified dataset."""
+
+def load_dataset(dataset: str) -> Table:
+    """Load file for the specified dataset."""
 
     filename = DATASETS[dataset]
     logger.debug(filename)

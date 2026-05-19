@@ -1070,7 +1070,7 @@ def main(results: Sequence[Dict[str, Any]] | None = None) -> None:
 
     if csv_path.exists():
         df = pd.read_csv(csv_path)
-        results = df.to_dict('records')
+        results = df.to_dict("records")
     else:
         results = results or SAMPLE_RESULTS
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
