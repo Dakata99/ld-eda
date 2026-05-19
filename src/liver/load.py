@@ -3,6 +3,8 @@ from pathlib import Path
 
 from .utils import root
 
+from Orange.data import Table
+
 # TODO: change this path!
 DATASETS_PATH: Path = root("datasets")
 DATASETS: dict[str, str] = {
@@ -11,9 +13,8 @@ DATASETS: dict[str, str] = {
     'liver': DATASETS_PATH / "liver-data/cleaned_data.csv",
 }
 
-def load_csv(dataset: str):
+def load_csv(dataset: str) -> Table:
     """Load CSV file for the specified dataset."""
-    from Orange.data import Table
 
     filename = DATASETS[dataset]
     logger.debug(filename)

@@ -33,6 +33,8 @@ import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 from plotly.offline import get_plotlyjs
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 
 SAMPLE_RESULTS = [
@@ -230,7 +232,7 @@ def pretty_json(value: Any) -> str:
 def get_learner_order(results: Sequence[Dict[str, Any]]) -> List[str]:
     seen = []
     for row in results:
-        learner = row["learner"]
+        learner = row["Learner"]
         if learner not in seen:
             seen.append(learner)
     ordered = [x for x in PREFERRED_LEARNER_ORDER if x in seen]
@@ -290,7 +292,7 @@ def build_dataframe(
     rows = []
 
     for raw in results:
-        learner = raw["learner"]
+        learner = raw["Learner"]
         counters[learner] += 1
         config_index = counters[learner]
         abbr = learner_abbreviation(learner)
@@ -1064,7 +1066,13 @@ updateEverything();
 
 
 def main(results: Sequence[Dict[str, Any]] | None = None) -> None:
-    results = results or SAMPLE_RESULTS
+    csv_path = Path(__file__).resolve().parent.parent.parent / "evaluation_results.csv"
+
+    if csv_path.exists():
+        df = pd.read_csv(csv_path)
+        results = df.to_dict('records')
+    else:
+        results = results or SAMPLE_RESULTS
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     df, metrics = build_dataframe(results)

@@ -11,3 +11,6 @@ source .venv/bin/activate
 
 # Install dependencies.
 uv pip install -e . ".[dev]"
+
+# Enable command-line autocompletion for the `liver` command.
+eval "$(register-python-argcomplete liver)"

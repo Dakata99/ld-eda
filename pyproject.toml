@@ -13,6 +13,7 @@ dependencies = [
     "loguru",
     "plotly",
     "argcomplete",
+    "seaborn",
 
     # Core Orange3
     "Orange3",
