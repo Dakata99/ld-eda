@@ -14,9 +14,10 @@ dependencies = [
     "plotly",
     "argcomplete",
     "seaborn",
-
     # Core Orange3
     "Orange3",
+    "pandas>=2.3.3",
+    "jinja2>=3.1.6",
 ]
 
 [project.scripts]

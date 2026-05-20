@@ -25,8 +25,8 @@ from Orange.classification import (
 
 
 def root(*args):
-    """TODO: write docstring.
-    TODO: maybe find a better way? --- IGNORE ---
+    """Get root folder of the project.
+    TODO: maybe find a better way?
 
     Args:
         *args: path components to join with the project root.
@@ -34,7 +34,6 @@ def root(*args):
     Returns:
         Path: the path to the project root joined with the provided path components.
     """
-    # TODO: maybe find a better way?
     return Path(__file__).resolve().parents[2].joinpath(*args)
 
 
@@ -49,58 +48,48 @@ def create_learners(config):
     # 1) Logistic regression
     configuration = config["logistic-regression"]
     combos = get_combinations(configuration)
-    logger.debug(f"Logistic regression combinations: {len(combos)}")
+    logger.debug(f"LR combinations ({len(combos)}): {combos}")
     for combo in combos:
         combo["class_weight"] = "balanced"
-        logger.debug(combo)
-
     logistic_regressions = [LogisticRegressionLearner(**combo) for combo in combos]
     logger.debug(logistic_regressions)
 
     # 2) Random forest
     configuration = config["random-forest"]
     combos = get_combinations(configuration)
-    logger.debug(f"Random forest combinations: {len(combos)}")
+    logger.debug(f"RF combinations ({len(combos)}): {combos}")
     for combo in combos:
         combo["class_weight"] = "balanced"
-        logger.debug(combo)
     random_forests = [RandomForestLearner(**combo) for combo in combos]
     logger.debug(random_forests)
 
     # 3) Tree
     configuration = config["tree"]
     combos = get_combinations(configuration)
-    logger.debug(f"Tree combinations: {len(combos)}")
-    for combo in combos:
-        logger.debug(combo)
+    logger.debug(f"Tree combinations ({len(combos)}): {combos}")
     trees = [TreeLearner(**combo) for combo in combos]
     logger.debug(trees)
 
     # 4) Gradient boosting
     configuration = config["gradient-boosting"]
     combos = get_combinations(configuration)
-    logger.debug(f"Gradient boosting combinations: {len(combos)}")
-    for combo in combos:
-        logger.debug(combo)
+    logger.debug(f"GB combinations ({len(combos)}): {combos}")
     gradient_boostings = [GBClassifier(**combo) for combo in combos]
     logger.debug(gradient_boostings)
 
     # 5) Neural network
     configuration = config["neural-network"]
     combos = get_combinations(configuration)
-    logger.debug(f"Neural network combinations: {len(combos)}")
-    for combo in combos:
-        logger.debug(combo)
+    logger.debug(f"NN combinations ({len(combos)}): {combos}")
     neural_networks = [NNClassificationLearner(**combo) for combo in combos]
     logger.debug(neural_networks)
 
     # 6) SVM
-    # FIXME: kerner issues
     configuration = config["svm"]
-    combos = get_combinations(configuration)
-    logger.debug(f"SVM combinations: {len(combos)}")
-    for combo in combos:
-        logger.debug(combo)
+    combos = []
+    for subconfig in configuration:
+        combos.extend(get_combinations(subconfig))
+    logger.debug(f"SVM combinations ({len(combos)}): {combos}")
     svms = [SVMLearner(**combo) for combo in combos]
     logger.debug(svms)
 

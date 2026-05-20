@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{ report_title }}</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f6f8fb;
+            color: #1f2937;
+            margin: 0;
+            padding: 32px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 18px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.06);
+        }
+
+        h1,
+        h2 {
+            margin-top: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+        }
+
+        th {
+            background: #eff6ff;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container">
+        <section class="card">
+            <h1>{{ report_title }}</h1>
+            <p>{{ report_description }}</p>
+        </section>
+
+        <section class="card">
+            <h2>Evaluation results</h2>
+            {{ evaluation_results | safe }}
+        </section>
+
+        <section class="card">
+            <h2>Heatmap of evaluation metrics</h2>
+            <p>{{ metrics_notes }}</p>
+            {{ heatmap | safe }}
+        </section>
+    </main>
+</body>
+
+</html>
