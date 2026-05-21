@@ -2,7 +2,7 @@
 # from .experiment2 import main as experiment2
 # from .experiment3 import main as experiment3
 from .experiment import main as experiment
-from .plot2 import main as plot
+from .plot import main as plot
 
 
 def run_analysis(exprid: int, learner_group: str = "all", config: str = "global") -> None:

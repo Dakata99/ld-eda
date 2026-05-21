@@ -57,7 +57,7 @@ def main():
 		run_analysis(args.experiment, args.learner_group, args.config)
 	else:
 		# Plot the results for the specified experiment
-		from .plot2 import main as plot
+		from .plot import main as plot
 
 		plot(
 			args.experiment,
