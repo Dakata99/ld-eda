@@ -17,6 +17,7 @@ dependencies = [
     "Orange3", # Core Orange3
     "pandas>=2.3.3",
     "jinja2>=3.1.6",
+    "bump-my-version>=1.3.0",
 ]
 
 [project.scripts]

@@ -51,8 +51,17 @@ def main(exprid: int, filename: str, outputfile: str):
 	if not fd.exists():
 		raise FileNotFoundError(f"Results file not found: {fd}")
 
+	# Load the CSV file into a DataFrame
 	df = pd.read_csv(fd)
-	logger.debug(df)
+	logger.debug(df.head())
+	# TODO: maybe reorder metrics columns
+	# df = df[["C", "A", "B"]]
+	# TODO: maybe sort by a specific metric (e.g. CA, AUC, F1, etc.)
+	df = df.sort_values(
+		by=["MCC", "F1(average=macro)", "Recall(average=macro)"],
+		ascending=[False, False, False]
+	)
+	logger.debug(df.head())
 
 	# 2) Generate heatmap
 	# TODO: per-learner family heat map

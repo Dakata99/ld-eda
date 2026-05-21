@@ -18,9 +18,8 @@ def main():
 	parser.add_argument("--experiment", type=int, required=True, choices=[1, 2, 3])
 	parser.add_argument("--debug", action="store_true", help="Enable debug logging")
 	parser.add_argument(
-		"--learner-group",
+		"--learners-group",
 		choices=[
-			"all",
 			"logistic-regression",
 			"random-forest",
 			"tree",
@@ -28,8 +27,9 @@ def main():
 			"neural-network",
 			"svm",
 		],
-		default="all",
-		help="Run a specific family of learners.",
+		nargs="+",
+		default=None,
+		help="Run specific family(ies) of learners.",
 	)
 	parser.add_argument(
 		"--config",
@@ -54,7 +54,7 @@ def main():
 		# Run the analysis for the specified experiment
 		from .core import run_analysis
 
-		run_analysis(args.experiment, args.learner_group, args.config)
+		run_analysis(args.experiment, args.learners_group, args.config)
 	else:
 		# Plot the results for the specified experiment
 		from .plot import main as plot

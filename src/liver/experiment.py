@@ -116,7 +116,7 @@ METRICS: dict[int, dict] = {
 }
 
 
-def main(exprid: int, learner_group: str = "all", configuration: str = "global") -> None:
+def main(exprid: int, learners_group: list, configuration: str = "global") -> None:
 	"""TODO: write docstring."""
 	logger.info(f"Running experiment {exprid}")
 
@@ -137,10 +137,13 @@ def main(exprid: int, learner_group: str = "all", configuration: str = "global")
 	logger.debug(learners)
 
 	# 4) Evaluate
-	if learner_group == "all":
+	learners_to_evaluate = []
+	if learners_group is None:
 		learners_to_evaluate = list(chain.from_iterable(learners.values()))
 	else:
-		learners_to_evaluate = learners[learner_group]
+		for group in learners_group:
+			if group in learners:
+				learners_to_evaluate.extend(learners[group])
 
 	ts = TestAndScore(data, learners_to_evaluate)
 	ts.train()

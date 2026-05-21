@@ -128,3 +128,7 @@ where the parameters for each learners are added.
 | `max_iter` | list(int)   | Iteration limit.                        |
 
 > NOTE: the configuration for this learner presents dicts of dicts since different kernels have different parameters.
+
+## Limitations
+
+- It can't be made when a parameter is disabled or not since passing `null` in the JSON will result in `None` value in Python, which may not be correct for some parameters of some learners.
