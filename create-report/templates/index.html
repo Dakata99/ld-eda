@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+    <h1>{{ report_title }}</h1>
+    <p>
+        This home page shows the overview heatmap only: the best configuration from each detected learner family.
+        Individual learner-family pages are generated automatically from the CSV.
+    </p>
+</section>
+
+<section class="summary-grid">
+    <article class="summary-card">
+        <div class="label">Rows in CSV</div>
+        <div class="value">{{ total_rows }}</div>
+    </article>
+
+    <article class="summary-card">
+        <div class="label">Detected families</div>
+        <div class="value">{{ family_count }}</div>
+    </article>
+
+    <article class="summary-card">
+        <div class="label">Main metric</div>
+        <div class="value">{{ main_metric }}</div>
+    </article>
+
+    <article class="summary-card">
+        <div class="label">Detected metrics</div>
+        <div class="value">{{ metric_count }}</div>
+    </article>
+</section>
+
+<section class="card">
+    <h2>Learner Family Pages</h2>
+    <p class="muted">
+        These pages were generated dynamically from the learner families found in the CSV.
+    </p>
+
+    <div class="family-grid">
+        {% for family in family_cards %}
+            <a class="family-link-card" href="{{ family.file }}">
+                <strong>{{ family.label }}</strong>
+                <span>{{ family.count }} configurations</span>
+                <span>Best {{ main_metric }}: {{ family.best_score }}</span>
+            </a>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="card">
+    <h2>Overview Heatmap — Best Configuration per Learner Family</h2>
+    <p class="muted">
+        Each row represents the best configuration for one learner family, selected by
+        <strong>{{ main_metric }}</strong>.
+    </p>
+
+    {{ overview_heatmap | safe }}
+</section>
+
+<section class="card">
+    <h2>Overview Tracking Table</h2>
+    <p class="muted">
+        This table maps the short heatmap labels back to the full learner configuration.
+    </p>
+
+    <div class="table-scroll">
+        {{ overview_tracking_table | safe }}
+    </div>
+</section>
+{% endblock %}

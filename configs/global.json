@@ -1,14 +1,17 @@
 {
     "logistic-regression": {
+        "penalty": [
+            "l2",
+            "l1"
+        ],
         "C": [
             0.1,
             1,
             5,
             10
         ],
-        "penalty": [
-            "l2",
-            "l1"
+        "class_weight": [
+            "balanced"
         ]
     },
     "random-forest": {
@@ -16,56 +19,45 @@
             100,
             300
         ],
+        "max_features": [
+            null,
+            5
+        ],
+        "random_state": [
+            42
+        ],
+        "class_weight": [
+            "balanced"
+        ],
         "max_depth": [
             null,
             10
+        ],
+        "min_samples_split": []
+    },
+    "tree": {
+        "binarize": [
+            false,
+            true
+        ],
+        "min_samples_leaf": [
+            1,
+            5
+        ],
+        "min_samples_split": [
+            2,
+            5
+        ],
+        "max_depth": [
+            null,
+            5,
+            10
+        ],
+        "sufficient_majority": [
+            0.95,
+            0.90
         ]
     },
-    "svm": [
-        {
-            "kernel": [
-                "linear"
-            ],
-            "C": [
-                0.1,
-                1,
-                10
-            ]
-        },
-        {
-            "kernel": [
-                "rbf"
-            ],
-            "C": [
-                0.1,
-                1,
-                10
-            ],
-            "gamma": [
-                "scale",
-                0.01,
-                0.001
-            ]
-        },
-        {
-            "kernel": [
-                "sigmoid"
-            ],
-            "C": [
-                0.1,
-                1,
-                10
-            ],
-            "gamma": [
-                "scale",
-                0.01
-            ],
-            "coef0": [
-                0,
-                1
-            ]
-        }
-    ],
     "gradient-boosting": {
         "n_estimators": [
             100,
@@ -75,21 +67,15 @@
             0.05,
             0.1
         ],
+        "random_state": [
+            42
+        ],
         "max_depth": [
             2,
             3
-        ]
-    },
-    "tree": {
-        "max_depth": [
-            null,
-            5,
-            10
         ],
-        "min_samples_leaf": [
-            1,
-            5
-        ]
+        "min_samples_split": [],
+        "subsample": []
     },
     "neural-network": {
         "hidden_layer_sizes": [
@@ -104,12 +90,66 @@
                 50
             ]
         ],
+        "activation": [
+            null
+        ],
+        "solver": [
+            null
+        ],
         "alpha": [
             0.0001,
             0.001
         ],
         "max_iter": [
             300
+        ],
+        "random_state": [
+            42
         ]
-    }
+    },
+    "svm": [
+        {
+            "C": [
+                0.1,
+                1,
+                10
+            ],
+            "kernel": [
+                "linear"
+            ]
+        },
+        {
+            "C": [
+                0.1,
+                1,
+                10
+            ],
+            "kernel": [
+                "rbf"
+            ],
+            "gamma": [
+                "scale",
+                0.01,
+                0.001
+            ]
+        },
+        {
+            "C": [
+                0.1,
+                1,
+                10
+            ],
+            "kernel": [
+                "sigmoid"
+            ],
+            "gamma": [
+                "scale",
+                0.01
+            ],
+            "coef0": [
+                0,
+                1
+            ]
+        }
+    ]
 }

@@ -6,6 +6,57 @@
     <title>{{ report_title }}</title>
 
     <style>
+        /* Sidebar */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background: #0f172a;
+            color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .navbar-inner {
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 14px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 22px;
+        }
+
+        .brand {
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .nav-links a {
+            color: #dbeafe;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.10);
+            color: white;
+        }
+
+        .nav-links a.active {
+            background: var(--primary);
+            color: white;
+        }
+
         body {
             font-family: Arial, sans-serif;
             background: #f6f8fb;
@@ -13,6 +64,8 @@
             margin: 0;
             padding: 32px;
         }
+
+
 
         .container {
             max-width: 1200px;
@@ -51,6 +104,22 @@
 </head>
 
 <body>
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <div class="brand">Liver ML Metrics Report</div>
+
+            <div class="nav-links">
+                <a href="{{ filename }}" class="{% if active_page == 'home' %}active{% endif %}">Home</a>
+                <a href="logistic_regression.html"
+                    class="{% if active_page == 'logistic-regression' %}active{% endif %}">Logistic Regression</a>
+                <a href="random_forest.html" class="{% if active_page == 'random-forest' %}active{% endif %}">Random
+                    Forest</a>
+
+                <a href="full_table.html" class="{% if active_page == 'full-table' %}active{% endif %}">Full Table</a>
+            </div>
+        </div>
+    </nav>
+
     <main class="container">
         <section class="card">
             <h1>{{ report_title }}</h1>
@@ -58,8 +127,21 @@
         </section>
 
         <section class="card">
-            <h2>Evaluation results</h2>
-            {{ evaluation_results | safe }}
+            <h2>Overview</h2>
+            <p>Best configuration from each learner family.</p>
+            {{ overview_heatmap | safe }}
+        </section>
+
+        <section class="card">
+            <h2>Family sections</h2>
+            <p>One heatmap per learner family.</p>
+            {{ family_heatmap | safe }}
+        </section>
+
+        <section class="card">
+            <h2>Family sections</h2>
+            <p>One heatmap per learner family.</p>
+            {{ overview_heatmap | safe }}
         </section>
 
         <section class="card">
@@ -68,6 +150,14 @@
             {{ heatmap | safe }}
         </section>
     </main>
+
+    <script>
+        document.getElementById("toggle").onclick = function () {
+            document.getElementById("sidebar").classList.toggle("collapsed");
+            document.getElementById("content").classList.toggle("collapsed");
+        };
+    </script>
+
 </body>
 
 </html>

@@ -38,110 +38,110 @@ import matplotlib.pyplot as plt
 
 
 SAMPLE_RESULTS = [
-    {
-        "learner": "logistic-regression",
-        "params": {"C": 0.1, "penalty": "l2"},
-        "MCC": 0.71,
-        "F1": 0.78,
-        "AUC": 0.85,
-        "CA": 0.80,
-    },
-    {
-        "learner": "logistic-regression",
-        "params": {"C": 1.0, "penalty": "l2"},
-        "MCC": 0.76,
-        "F1": 0.82,
-        "AUC": 0.88,
-        "CA": 0.83,
-    },
-    {
-        "learner": "logistic-regression",
-        "params": {"C": 5.0, "penalty": "l1"},
-        "MCC": 0.74,
-        "F1": 0.80,
-        "AUC": 0.87,
-        "CA": 0.82,
-    },
-    {
-        "learner": "random-forest",
-        "params": {"n_estimators": 100, "max_depth": None},
-        "MCC": 0.82,
-        "F1": 0.87,
-        "AUC": 0.93,
-        "CA": 0.88,
-    },
-    {
-        "learner": "random-forest",
-        "params": {"n_estimators": 300, "max_depth": 10},
-        "MCC": 0.85,
-        "F1": 0.89,
-        "AUC": 0.95,
-        "CA": 0.90,
-    },
-    {
-        "learner": "random-forest",
-        "params": {"n_estimators": 100, "max_depth": 10},
-        "MCC": 0.83,
-        "F1": 0.88,
-        "AUC": 0.94,
-        "CA": 0.89,
-    },
-    {
-        "learner": "svm",
-        "params": {"C": 0.1, "kernel": "rbf"},
-        "MCC": 0.68,
-        "F1": 0.74,
-        "AUC": 0.81,
-        "CA": 0.77,
-    },
-    {
-        "learner": "svm",
-        "params": {"C": 1.0, "kernel": "rbf"},
-        "MCC": 0.79,
-        "F1": 0.84,
-        "AUC": 0.90,
-        "CA": 0.85,
-    },
-    {
-        "learner": "svm",
-        "params": {"C": 10, "kernel": "linear"},
-        "MCC": 0.77,
-        "F1": 0.83,
-        "AUC": 0.89,
-        "CA": 0.84,
-    },
-    {
-        "learner": "gradient-boosting",
-        "params": {"n_estimators": 100, "lr": 0.1},
-        "MCC": 0.86,
-        "F1": 0.90,
-        "AUC": 0.96,
-        "CA": 0.91,
-    },
-    {
-        "learner": "gradient-boosting",
-        "params": {"n_estimators": 300, "lr": 0.05},
-        "MCC": 0.88,
-        "F1": 0.92,
-        "AUC": 0.97,
-        "CA": 0.93,
-    },
-    {
-        "learner": "neural-network",
-        "params": {"hidden": [100], "lr": 0.001},
-        "MCC": 0.80,
-        "F1": 0.85,
-        "AUC": 0.92,
-        "CA": 0.87,
-    },
-    {
-        "learner": "neural-network",
-        "params": {"hidden": [50, 50], "lr": 0.0001},
-        "MCC": 0.78,
-        "F1": 0.83,
-        "AUC": 0.91,
-        "CA": 0.86,
-    },
+	{
+		"learner": "logistic-regression",
+		"params": {"C": 0.1, "penalty": "l2"},
+		"MCC": 0.71,
+		"F1": 0.78,
+		"AUC": 0.85,
+		"CA": 0.80,
+	},
+	{
+		"learner": "logistic-regression",
+		"params": {"C": 1.0, "penalty": "l2"},
+		"MCC": 0.76,
+		"F1": 0.82,
+		"AUC": 0.88,
+		"CA": 0.83,
+	},
+	{
+		"learner": "logistic-regression",
+		"params": {"C": 5.0, "penalty": "l1"},
+		"MCC": 0.74,
+		"F1": 0.80,
+		"AUC": 0.87,
+		"CA": 0.82,
+	},
+	{
+		"learner": "random-forest",
+		"params": {"n_estimators": 100, "max_depth": None},
+		"MCC": 0.82,
+		"F1": 0.87,
+		"AUC": 0.93,
+		"CA": 0.88,
+	},
+	{
+		"learner": "random-forest",
+		"params": {"n_estimators": 300, "max_depth": 10},
+		"MCC": 0.85,
+		"F1": 0.89,
+		"AUC": 0.95,
+		"CA": 0.90,
+	},
+	{
+		"learner": "random-forest",
+		"params": {"n_estimators": 100, "max_depth": 10},
+		"MCC": 0.83,
+		"F1": 0.88,
+		"AUC": 0.94,
+		"CA": 0.89,
+	},
+	{
+		"learner": "svm",
+		"params": {"C": 0.1, "kernel": "rbf"},
+		"MCC": 0.68,
+		"F1": 0.74,
+		"AUC": 0.81,
+		"CA": 0.77,
+	},
+	{
+		"learner": "svm",
+		"params": {"C": 1.0, "kernel": "rbf"},
+		"MCC": 0.79,
+		"F1": 0.84,
+		"AUC": 0.90,
+		"CA": 0.85,
+	},
+	{
+		"learner": "svm",
+		"params": {"C": 10, "kernel": "linear"},
+		"MCC": 0.77,
+		"F1": 0.83,
+		"AUC": 0.89,
+		"CA": 0.84,
+	},
+	{
+		"learner": "gradient-boosting",
+		"params": {"n_estimators": 100, "lr": 0.1},
+		"MCC": 0.86,
+		"F1": 0.90,
+		"AUC": 0.96,
+		"CA": 0.91,
+	},
+	{
+		"learner": "gradient-boosting",
+		"params": {"n_estimators": 300, "lr": 0.05},
+		"MCC": 0.88,
+		"F1": 0.92,
+		"AUC": 0.97,
+		"CA": 0.93,
+	},
+	{
+		"learner": "neural-network",
+		"params": {"hidden": [100], "lr": 0.001},
+		"MCC": 0.80,
+		"F1": 0.85,
+		"AUC": 0.92,
+		"CA": 0.87,
+	},
+	{
+		"learner": "neural-network",
+		"params": {"hidden": [50, 50], "lr": 0.0001},
+		"MCC": 0.78,
+		"F1": 0.83,
+		"AUC": 0.91,
+		"CA": 0.86,
+	},
 ]
 
 OUTPUT_DIR = Path(__file__).resolve().parent / "learner_multidim_interactive_output"
@@ -149,451 +149,437 @@ DEFAULT_PRIMARY_METRIC = "MCC"
 DEFAULT_NORMALIZE = True
 
 PREFERRED_METRIC_ORDER = [
-    "MCC",
-    "PR_AUC",
-    "F1",
-    "Recall",
-    "Precision",
-    "Balanced_Accuracy",
-    "CA",
-    "AUC",
-    "ROC_AUC",
+	"MCC",
+	"PR_AUC",
+	"F1",
+	"Recall",
+	"Precision",
+	"Balanced_Accuracy",
+	"CA",
+	"AUC",
+	"ROC_AUC",
 ]
 
 PREFERRED_LEARNER_ORDER = [
-    "logistic-regression",
-    "random-forest",
-    "svm",
-    "gradient-boosting",
-    "neural-network",
+	"logistic-regression",
+	"random-forest",
+	"svm",
+	"gradient-boosting",
+	"neural-network",
 ]
 
 
 def is_number(value: Any) -> bool:
-    return isinstance(value, (int, float, np.number)) and not isinstance(value, bool)
+	return isinstance(value, (int, float, np.number)) and not isinstance(value, bool)
 
 
 def detect_metric_columns(results: Sequence[Dict[str, Any]]) -> List[str]:
-    ignore = {
-        "learner",
-        "params",
-        "config",
-        "config_id",
-        "learner_family",
-        "learner_abbr",
-    }
-    discovered = []
-    seen = set()
+	ignore = {
+		"learner",
+		"params",
+		"config",
+		"config_id",
+		"learner_family",
+		"learner_abbr",
+	}
+	discovered = []
+	seen = set()
 
-    for row in results:
-        for key, value in row.items():
-            if key in ignore:
-                continue
-            if is_number(value) and key not in seen:
-                discovered.append(key)
-                seen.add(key)
+	for row in results:
+		for key, value in row.items():
+			if key in ignore:
+				continue
+			if is_number(value) and key not in seen:
+				discovered.append(key)
+				seen.add(key)
 
-    preferred_first = [m for m in PREFERRED_METRIC_ORDER if m in seen]
-    remaining = [m for m in discovered if m not in preferred_first]
-    return preferred_first + remaining
+	preferred_first = [m for m in PREFERRED_METRIC_ORDER if m in seen]
+	remaining = [m for m in discovered if m not in preferred_first]
+	return preferred_first + remaining
 
 
 def learner_abbreviation(learner_name: str) -> str:
-    explicit = {
-        "logistic-regression": "LR",
-        "random-forest": "RF",
-        "svm": "SVM",
-        "gradient-boosting": "GB",
-        "neural-network": "NN",
-        "decision-tree": "DT",
-        "tree": "DT",
-        "naive-bayes": "NB",
-        "knn": "KNN",
-    }
-    if learner_name in explicit:
-        return explicit[learner_name]
+	explicit = {
+		"logistic-regression": "LR",
+		"random-forest": "RF",
+		"svm": "SVM",
+		"gradient-boosting": "GB",
+		"neural-network": "NN",
+		"decision-tree": "DT",
+		"tree": "DT",
+		"naive-bayes": "NB",
+		"knn": "KNN",
+	}
+	if learner_name in explicit:
+		return explicit[learner_name]
 
-    parts = [p for p in learner_name.replace("_", "-").split("-") if p]
-    if not parts:
-        return "MODEL"
-    if len(parts) == 1:
-        return parts[0][:3].upper()
-    return "".join(p[0].upper() for p in parts)
+	parts = [p for p in learner_name.replace("_", "-").split("-") if p]
+	if not parts:
+		return "MODEL"
+	if len(parts) == 1:
+		return parts[0][:3].upper()
+	return "".join(p[0].upper() for p in parts)
 
 
 def stable_json(value: Any) -> str:
-    return json.dumps(value, sort_keys=True, ensure_ascii=False)
+	return json.dumps(value, sort_keys=True, ensure_ascii=False)
 
 
 def pretty_json(value: Any) -> str:
-    return json.dumps(value, sort_keys=True, ensure_ascii=False, indent=2)
+	return json.dumps(value, sort_keys=True, ensure_ascii=False, indent=2)
 
 
 def get_learner_order(results: Sequence[Dict[str, Any]]) -> List[str]:
-    seen = []
-    for row in results:
-        learner = row["Learner"]
-        if learner not in seen:
-            seen.append(learner)
-    ordered = [x for x in PREFERRED_LEARNER_ORDER if x in seen]
-    ordered += [x for x in seen if x not in ordered]
-    return ordered
+	seen = []
+	for row in results:
+		learner = row["Learner"]
+		if learner not in seen:
+			seen.append(learner)
+	ordered = [x for x in PREFERRED_LEARNER_ORDER if x in seen]
+	ordered += [x for x in seen if x not in ordered]
+	return ordered
 
 
 def metric_theoretical_bounds(metric_name: str) -> tuple[float, float]:
-    metric_upper = metric_name.upper()
-    if metric_upper == "MCC":
-        return -1.0, 1.0
+	metric_upper = metric_name.upper()
+	if metric_upper == "MCC":
+		return -1.0, 1.0
 
-    bounded_0_1_names = {
-        "F1",
-        "AUC",
-        "ROC_AUC",
-        "PR_AUC",
-        "CA",
-        "PRECISION",
-        "RECALL",
-        "BALANCED_ACCURACY",
-        "SPECIFICITY",
-        "SENSITIVITY",
-    }
-    if metric_upper in bounded_0_1_names:
-        return 0.0, 1.0
+	bounded_0_1_names = {
+		"F1",
+		"AUC",
+		"ROC_AUC",
+		"PR_AUC",
+		"CA",
+		"PRECISION",
+		"RECALL",
+		"BALANCED_ACCURACY",
+		"SPECIFICITY",
+		"SENSITIVITY",
+	}
+	if metric_upper in bounded_0_1_names:
+		return 0.0, 1.0
 
-    return math.nan, math.nan
+	return math.nan, math.nan
 
 
 def normalize_series(series: pd.Series, metric_name: str) -> pd.Series:
-    lower, upper = metric_theoretical_bounds(metric_name)
+	lower, upper = metric_theoretical_bounds(metric_name)
 
-    if math.isnan(lower) or math.isnan(upper):
-        observed_min = series.min()
-        observed_max = series.max()
-        if (
-            pd.isna(observed_min)
-            or pd.isna(observed_max)
-            or observed_min == observed_max
-        ):
-            return pd.Series(np.ones(len(series)), index=series.index)
-        return (series - observed_min) / (observed_max - observed_min)
+	if math.isnan(lower) or math.isnan(upper):
+		observed_min = series.min()
+		observed_max = series.max()
+		if pd.isna(observed_min) or pd.isna(observed_max) or observed_min == observed_max:
+			return pd.Series(np.ones(len(series)), index=series.index)
+		return (series - observed_min) / (observed_max - observed_min)
 
-    normalized = (series - lower) / (upper - lower)
-    return normalized.clip(0.0, 1.0)
+	normalized = (series - lower) / (upper - lower)
+	return normalized.clip(0.0, 1.0)
 
 
 def build_dataframe(
-    results: Sequence[Dict[str, Any]],
+	results: Sequence[Dict[str, Any]],
 ) -> tuple[pd.DataFrame, List[str]]:
-    metrics = detect_metric_columns(results)
-    learner_order = get_learner_order(results)
-    learner_order_index = {name: i for i, name in enumerate(learner_order)}
+	metrics = detect_metric_columns(results)
+	learner_order = get_learner_order(results)
+	learner_order_index = {name: i for i, name in enumerate(learner_order)}
 
-    counters = defaultdict(int)
-    rows = []
+	counters = defaultdict(int)
+	rows = []
 
-    for raw in results:
-        learner = raw["Learner"]
-        counters[learner] += 1
-        config_index = counters[learner]
-        abbr = learner_abbreviation(learner)
-        config_id = f"{abbr}{config_index}"
+	for raw in results:
+		learner = raw["Learner"]
+		counters[learner] += 1
+		config_index = counters[learner]
+		abbr = learner_abbreviation(learner)
+		config_id = f"{abbr}{config_index}"
 
-        row = {
-            "learner": learner,
-            "learner_abbr": abbr,
-            "config_index": config_index,
-            "config_id": config_id,
-            "params": raw.get("params", {}),
-            "params_json": stable_json(raw.get("params", {})),
-            "params_pretty": pretty_json(raw.get("params", {})),
-            "learner_order": learner_order_index[learner],
-        }
-        for metric in metrics:
-            row[metric] = raw.get(metric, np.nan)
-        rows.append(row)
+		row = {
+			"learner": learner,
+			"learner_abbr": abbr,
+			"config_index": config_index,
+			"config_id": config_id,
+			"params": raw.get("params", {}),
+			"params_json": stable_json(raw.get("params", {})),
+			"params_pretty": pretty_json(raw.get("params", {})),
+			"learner_order": learner_order_index[learner],
+		}
+		for metric in metrics:
+			row[metric] = raw.get(metric, np.nan)
+		rows.append(row)
 
-    df = (
-        pd.DataFrame(rows)
-        .sort_values(by=["learner_order", "config_index"], kind="stable")
-        .reset_index(drop=True)
-    )
+	df = (
+		pd.DataFrame(rows)
+		.sort_values(by=["learner_order", "config_index"], kind="stable")
+		.reset_index(drop=True)
+	)
 
-    for metric in metrics:
-        df[f"{metric}__norm"] = normalize_series(df[metric], metric)
+	for metric in metrics:
+		df[f"{metric}__norm"] = normalize_series(df[metric], metric)
 
-    return df, metrics
+	return df, metrics
 
 
 def metric_explanation_block(metrics: Sequence[str]) -> str:
-    bullets = []
-    for metric in metrics:
-        if metric.upper() == "MCC":
-            bullets.append(
-                "<li><strong>MCC</strong>: strong single-number summary, especially useful for imbalanced classification. Closer to 1 is better.</li>"
-            )
-        elif metric.upper() == "F1":
-            bullets.append(
-                "<li><strong>F1</strong>: balance between precision and recall. Higher is better.</li>"
-            )
-        elif metric.upper() in {"AUC", "ROC_AUC"}:
-            bullets.append(
-                "<li><strong>AUC / ROC AUC</strong>: ranking quality across thresholds. Higher is better.</li>"
-            )
-        elif metric.upper() == "CA":
-            bullets.append(
-                "<li><strong>CA</strong>: classification accuracy. Easy to read, but can be misleading for imbalanced data.</li>"
-            )
-        elif metric.upper() == "PR_AUC":
-            bullets.append(
-                "<li><strong>PR AUC</strong>: often more informative than ROC AUC when the positive class is rare. Higher is better.</li>"
-            )
-        elif metric.upper() == "RECALL":
-            bullets.append(
-                "<li><strong>Recall</strong>: how many actual positives were found. Higher is better when missing positives is costly.</li>"
-            )
-        elif metric.upper() == "PRECISION":
-            bullets.append(
-                "<li><strong>Precision</strong>: how many predicted positives were actually correct. Higher is better when false alarms are costly.</li>"
-            )
-        else:
-            bullets.append(
-                f"<li><strong>{metric}</strong>: higher is assumed to be better.</li>"
-            )
-    return "\n".join(bullets)
+	bullets = []
+	for metric in metrics:
+		if metric.upper() == "MCC":
+			bullets.append(
+				"<li><strong>MCC</strong>: strong single-number summary, especially useful for imbalanced classification. Closer to 1 is better.</li>"
+			)
+		elif metric.upper() == "F1":
+			bullets.append(
+				"<li><strong>F1</strong>: balance between precision and recall. Higher is better.</li>"
+			)
+		elif metric.upper() in {"AUC", "ROC_AUC"}:
+			bullets.append(
+				"<li><strong>AUC / ROC AUC</strong>: ranking quality across thresholds. Higher is better.</li>"
+			)
+		elif metric.upper() == "CA":
+			bullets.append(
+				"<li><strong>CA</strong>: classification accuracy. Easy to read, but can be misleading for imbalanced data.</li>"
+			)
+		elif metric.upper() == "PR_AUC":
+			bullets.append(
+				"<li><strong>PR AUC</strong>: often more informative than ROC AUC when the positive class is rare. Higher is better.</li>"
+			)
+		elif metric.upper() == "RECALL":
+			bullets.append(
+				"<li><strong>Recall</strong>: how many actual positives were found. Higher is better when missing positives is costly.</li>"
+			)
+		elif metric.upper() == "PRECISION":
+			bullets.append(
+				"<li><strong>Precision</strong>: how many predicted positives were actually correct. Higher is better when false alarms are costly.</li>"
+			)
+		else:
+			bullets.append(f"<li><strong>{metric}</strong>: higher is assumed to be better.</li>")
+	return "\n".join(bullets)
 
 
 def make_heatmap_figure(
-    df: pd.DataFrame, metrics: Sequence[str], normalize: bool, primary_metric: str
+	df: pd.DataFrame, metrics: Sequence[str], normalize: bool, primary_metric: str
 ) -> go.Figure:
-    working = (
-        df.copy()
-        .sort_values(
-            by=["learner_order", primary_metric], ascending=[True, False], kind="stable"
-        )
-        .reset_index(drop=True)
-    )
+	working = (
+		df.copy()
+		.sort_values(by=["learner_order", primary_metric], ascending=[True, False], kind="stable")
+		.reset_index(drop=True)
+	)
 
-    z = []
-    raw_text = []
-    customdata = []
-    y_labels = []
+	z = []
+	raw_text = []
+	customdata = []
+	y_labels = []
 
-    for _, row in working.iterrows():
-        y_labels.append(row["config_id"])
-        z_row = []
-        raw_row = []
-        custom_row = []
-        for metric in metrics:
-            raw_value = float(row[metric])
-            plot_value = float(row[f"{metric}__norm"]) if normalize else raw_value
-            z_row.append(plot_value)
-            raw_row.append(f"{raw_value:.3f}")
-            custom_row.append(
-                [
-                    row["config_id"],
-                    row["learner"],
-                    row["params_pretty"],
-                    metric,
-                    raw_value,
-                    float(row[f"{metric}__norm"]),
-                ]
-            )
-        z.append(z_row)
-        raw_text.append(raw_row)
-        customdata.append(custom_row)
+	for _, row in working.iterrows():
+		y_labels.append(row["config_id"])
+		z_row = []
+		raw_row = []
+		custom_row = []
+		for metric in metrics:
+			raw_value = float(row[metric])
+			plot_value = float(row[f"{metric}__norm"]) if normalize else raw_value
+			z_row.append(plot_value)
+			raw_row.append(f"{raw_value:.3f}")
+			custom_row.append(
+				[
+					row["config_id"],
+					row["learner"],
+					row["params_pretty"],
+					metric,
+					raw_value,
+					float(row[f"{metric}__norm"]),
+				]
+			)
+		z.append(z_row)
+		raw_text.append(raw_row)
+		customdata.append(custom_row)
 
-    fig = go.Figure(
-        data=[
-            go.Heatmap(
-                z=z,
-                x=list(metrics),
-                y=y_labels,
-                customdata=customdata,
-                text=raw_text,
-                texttemplate="%{text}",
-                colorscale="Viridis",
-                colorbar={"title": "Normalized" if normalize else "Raw"},
-                hovertemplate=(
-                    "<b>%{customdata[0]}</b><br>"
-                    "Learner: %{customdata[1]}<br>"
-                    "Metric: %{customdata[3]}<br>"
-                    "Raw value: %{customdata[4]:.4f}<br>"
-                    "Normalized: %{customdata[5]:.4f}<br>"
-                    "<br><b>Parameters</b><br><span style='font-family:monospace'>%{customdata[2]}</span>"
-                    "<extra></extra>"
-                ),
-            )
-        ]
-    )
-    fig.update_layout(
-        title=f"Heatmap overview — grouped by learner family, sorted within family by {primary_metric}",
-        xaxis_title="Metrics",
-        yaxis_title="Configurations",
-        height=max(550, 40 * len(working) + 220),
-        margin=dict(l=90, r=20, t=80, b=70),
-    )
-    return fig
+	fig = go.Figure(
+		data=[
+			go.Heatmap(
+				z=z,
+				x=list(metrics),
+				y=y_labels,
+				customdata=customdata,
+				text=raw_text,
+				texttemplate="%{text}",
+				colorscale="Viridis",
+				colorbar={"title": "Normalized" if normalize else "Raw"},
+				hovertemplate=(
+					"<b>%{customdata[0]}</b><br>"
+					"Learner: %{customdata[1]}<br>"
+					"Metric: %{customdata[3]}<br>"
+					"Raw value: %{customdata[4]:.4f}<br>"
+					"Normalized: %{customdata[5]:.4f}<br>"
+					"<br><b>Parameters</b><br><span style='font-family:monospace'>%{customdata[2]}</span>"
+					"<extra></extra>"
+				),
+			)
+		]
+	)
+	fig.update_layout(
+		title=f"Heatmap overview — grouped by learner family, sorted within family by {primary_metric}",
+		xaxis_title="Metrics",
+		yaxis_title="Configurations",
+		height=max(550, 40 * len(working) + 220),
+		margin=dict(l=90, r=20, t=80, b=70),
+	)
+	return fig
 
 
 def make_profile_figure(
-    df: pd.DataFrame, metrics: Sequence[str], normalize: bool, primary_metric: str
+	df: pd.DataFrame, metrics: Sequence[str], normalize: bool, primary_metric: str
 ) -> go.Figure:
-    working = (
-        df.copy()
-        .sort_values(
-            by=["learner_order", primary_metric], ascending=[True, False], kind="stable"
-        )
-        .reset_index(drop=True)
-    )
-    fig = go.Figure()
-    families = working["learner"].unique().tolist()
-    traces_per_family = []
+	working = (
+		df.copy()
+		.sort_values(by=["learner_order", primary_metric], ascending=[True, False], kind="stable")
+		.reset_index(drop=True)
+	)
+	fig = go.Figure()
+	families = working["learner"].unique().tolist()
+	traces_per_family = []
 
-    for family in families:
-        sub = working[working["learner"] == family].copy()
-        family_trace_indices = []
-        for _, row in sub.iterrows():
-            y_values = [
-                float(row[f"{metric}__norm"]) if normalize else float(row[metric])
-                for metric in metrics
-            ]
-            hover_parts = [
-                f"<b>{row['config_id']}</b>",
-                f"Learner: {row['learner']}",
-                f"Primary metric ({primary_metric}): {row[primary_metric]:.4f}",
-                "Parameters:",
-                f"<pre>{row['params_pretty']}</pre>",
-            ]
-            hover_parts.extend([f"{metric}: {row[metric]:.4f}" for metric in metrics])
-            fig.add_trace(
-                go.Scatter(
-                    x=list(metrics),
-                    y=y_values,
-                    mode="lines+markers",
-                    name=row["config_id"],
-                    visible=(family == families[0]),
-                    hovertemplate="<br>".join(hover_parts) + "<extra></extra>",
-                )
-            )
-            family_trace_indices.append(len(fig.data) - 1)
-        traces_per_family.append(family_trace_indices)
+	for family in families:
+		sub = working[working["learner"] == family].copy()
+		family_trace_indices = []
+		for _, row in sub.iterrows():
+			y_values = [
+				float(row[f"{metric}__norm"]) if normalize else float(row[metric])
+				for metric in metrics
+			]
+			hover_parts = [
+				f"<b>{row['config_id']}</b>",
+				f"Learner: {row['learner']}",
+				f"Primary metric ({primary_metric}): {row[primary_metric]:.4f}",
+				"Parameters:",
+				f"<pre>{row['params_pretty']}</pre>",
+			]
+			hover_parts.extend([f"{metric}: {row[metric]:.4f}" for metric in metrics])
+			fig.add_trace(
+				go.Scatter(
+					x=list(metrics),
+					y=y_values,
+					mode="lines+markers",
+					name=row["config_id"],
+					visible=(family == families[0]),
+					hovertemplate="<br>".join(hover_parts) + "<extra></extra>",
+				)
+			)
+			family_trace_indices.append(len(fig.data) - 1)
+		traces_per_family.append(family_trace_indices)
 
-    all_visible = [True] * len(fig.data)
-    buttons = [
-        {
-            "label": "All learner families",
-            "method": "update",
-            "args": [
-                {"visible": all_visible},
-                {
-                    "title": f"Metric profiles — all learner families ({'normalized' if normalize else 'raw'} values)"
-                },
-            ],
-        }
-    ]
+	all_visible = [True] * len(fig.data)
+	buttons = [
+		{
+			"label": "All learner families",
+			"method": "update",
+			"args": [
+				{"visible": all_visible},
+				{
+					"title": f"Metric profiles — all learner families ({'normalized' if normalize else 'raw'} values)"
+				},
+			],
+		}
+	]
 
-    for family, indices in zip(families, traces_per_family):
-        visible = [False] * len(fig.data)
-        for idx in indices:
-            visible[idx] = True
-        buttons.append(
-            {
-                "label": family,
-                "method": "update",
-                "args": [
-                    {"visible": visible},
-                    {
-                        "title": f"Metric profiles — {family} ({'normalized' if normalize else 'raw'} values)"
-                    },
-                ],
-            }
-        )
+	for family, indices in zip(families, traces_per_family):
+		visible = [False] * len(fig.data)
+		for idx in indices:
+			visible[idx] = True
+		buttons.append(
+			{
+				"label": family,
+				"method": "update",
+				"args": [
+					{"visible": visible},
+					{
+						"title": f"Metric profiles — {family} ({'normalized' if normalize else 'raw'} values)"
+					},
+				],
+			}
+		)
 
-    fig.update_layout(
-        title=f"Metric profiles — all learner families ({'normalized' if normalize else 'raw'} values)",
-        xaxis_title="Metrics",
-        yaxis_title="Normalized value" if normalize else "Raw value",
-        updatemenus=[
-            {
-                "buttons": buttons,
-                "direction": "down",
-                "showactive": True,
-                "x": 1.02,
-                "y": 1.12,
-                "xanchor": "left",
-                "yanchor": "top",
-            }
-        ],
-        height=650,
-        margin=dict(l=70, r=220, t=80, b=70),
-        legend_title="Configuration",
-    )
-    return fig
+	fig.update_layout(
+		title=f"Metric profiles — all learner families ({'normalized' if normalize else 'raw'} values)",
+		xaxis_title="Metrics",
+		yaxis_title="Normalized value" if normalize else "Raw value",
+		updatemenus=[
+			{
+				"buttons": buttons,
+				"direction": "down",
+				"showactive": True,
+				"x": 1.02,
+				"y": 1.12,
+				"xanchor": "left",
+				"yanchor": "top",
+			}
+		],
+		height=650,
+		margin=dict(l=70, r=220, t=80, b=70),
+		legend_title="Configuration",
+	)
+	return fig
 
 
 def build_report_data(df: pd.DataFrame, metrics: Sequence[str]) -> dict:
-    records = []
-    for _, row in df.iterrows():
-        records.append(
-            {
-                "config_id": row["config_id"],
-                "learner": row["learner"],
-                "learner_abbr": row["learner_abbr"],
-                "learner_order": int(row["learner_order"]),
-                "config_index": int(row["config_index"]),
-                "params_json": row["params_json"],
-                "params_pretty": row["params_pretty"],
-                "metrics": {metric: float(row[metric]) for metric in metrics},
-                "metrics_norm": {
-                    metric: float(row[f"{metric}__norm"]) for metric in metrics
-                },
-            }
-        )
-    return {
-        "metrics": list(metrics),
-        "default_primary_metric": DEFAULT_PRIMARY_METRIC
-        if DEFAULT_PRIMARY_METRIC in metrics
-        else metrics[0],
-        "default_normalize": DEFAULT_NORMALIZE,
-        "records": records,
-    }
+	records = []
+	for _, row in df.iterrows():
+		records.append(
+			{
+				"config_id": row["config_id"],
+				"learner": row["learner"],
+				"learner_abbr": row["learner_abbr"],
+				"learner_order": int(row["learner_order"]),
+				"config_index": int(row["config_index"]),
+				"params_json": row["params_json"],
+				"params_pretty": row["params_pretty"],
+				"metrics": {metric: float(row[metric]) for metric in metrics},
+				"metrics_norm": {metric: float(row[f"{metric}__norm"]) for metric in metrics},
+			}
+		)
+	return {
+		"metrics": list(metrics),
+		"default_primary_metric": DEFAULT_PRIMARY_METRIC
+		if DEFAULT_PRIMARY_METRIC in metrics
+		else metrics[0],
+		"default_normalize": DEFAULT_NORMALIZE,
+		"records": records,
+	}
 
 
 def save_csv(df: pd.DataFrame, metrics: Sequence[str], output_dir: Path) -> Path:
-    cols = ["config_id", "learner", "learner_abbr", "params_json", *metrics]
-    path = output_dir / "interactive_summary.csv"
-    df[cols].to_csv(path, index=False)
-    return path
+	cols = ["config_id", "learner", "learner_abbr", "params_json", *metrics]
+	path = output_dir / "interactive_summary.csv"
+	df[cols].to_csv(path, index=False)
+	return path
 
 
-def make_html_report(
-    df: pd.DataFrame, metrics: Sequence[str], output_dir: Path
-) -> Path:
-    report_data = build_report_data(df, metrics)
-    primary_metric = report_data["default_primary_metric"]
-    normalize = report_data["default_normalize"]
+def make_html_report(df: pd.DataFrame, metrics: Sequence[str], output_dir: Path) -> Path:
+	report_data = build_report_data(df, metrics)
+	primary_metric = report_data["default_primary_metric"]
+	normalize = report_data["default_normalize"]
 
-    heatmap_html = make_heatmap_figure(
-        df, metrics, normalize=normalize, primary_metric=primary_metric
-    ).to_html(
-        full_html=False,
-        include_plotlyjs=False,
-        div_id="heatmap_plot",
-    )
-    profile_html = make_profile_figure(
-        df, metrics, normalize=normalize, primary_metric=primary_metric
-    ).to_html(
-        full_html=False,
-        include_plotlyjs=False,
-        div_id="profile_plot",
-    )
+	heatmap_html = make_heatmap_figure(
+		df, metrics, normalize=normalize, primary_metric=primary_metric
+	).to_html(
+		full_html=False,
+		include_plotlyjs=False,
+		div_id="heatmap_plot",
+	)
+	profile_html = make_profile_figure(
+		df, metrics, normalize=normalize, primary_metric=primary_metric
+	).to_html(
+		full_html=False,
+		include_plotlyjs=False,
+		div_id="profile_plot",
+	)
 
-    metrics_options = "\n".join(
-        f'<option value="{m}" {"selected" if m == primary_metric else ""}>{m}</option>'
-        for m in metrics
-    )
+	metrics_options = "\n".join(
+		f'<option value="{m}" {"selected" if m == primary_metric else ""}>{m}</option>'
+		for m in metrics
+	)
 
-    html = """<!doctype html>
+	html = """<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -1052,38 +1038,38 @@ updateEverything();
 </html>
 """
 
-    html = html.replace("__METRIC_OPTIONS__", metrics_options)
-    html = html.replace("__NORMALIZE_CHECKED__", "checked" if normalize else "")
-    html = html.replace("__METRIC_EXPLANATIONS__", metric_explanation_block(metrics))
-    html = html.replace("__HEATMAP_HTML__", heatmap_html)
-    html = html.replace("__PROFILE_HTML__", profile_html)
-    html = html.replace("__PLOTLY_JS__", get_plotlyjs())
-    html = html.replace("__REPORT_JSON__", json.dumps(report_data, ensure_ascii=False))
+	html = html.replace("__METRIC_OPTIONS__", metrics_options)
+	html = html.replace("__NORMALIZE_CHECKED__", "checked" if normalize else "")
+	html = html.replace("__METRIC_EXPLANATIONS__", metric_explanation_block(metrics))
+	html = html.replace("__HEATMAP_HTML__", heatmap_html)
+	html = html.replace("__PROFILE_HTML__", profile_html)
+	html = html.replace("__PLOTLY_JS__", get_plotlyjs())
+	html = html.replace("__REPORT_JSON__", json.dumps(report_data, ensure_ascii=False))
 
-    path = output_dir / "interactive_report.html"
-    path.write_text(html, encoding="utf-8")
-    return path
+	path = output_dir / "interactive_report.html"
+	path.write_text(html, encoding="utf-8")
+	return path
 
 
 def main(results: Sequence[Dict[str, Any]] | None = None) -> None:
-    csv_path = Path(__file__).resolve().parent.parent.parent / "evaluation_results.csv"
+	csv_path = Path(__file__).resolve().parent.parent.parent / "evaluation_results.csv"
 
-    if csv_path.exists():
-        df = pd.read_csv(csv_path)
-        results = df.to_dict("records")
-    else:
-        results = results or SAMPLE_RESULTS
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+	if csv_path.exists():
+		df = pd.read_csv(csv_path)
+		results = df.to_dict("records")
+	else:
+		results = results or SAMPLE_RESULTS
+	OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    df, metrics = build_dataframe(results)
-    csv_path = save_csv(df, metrics, OUTPUT_DIR)
-    html_path = make_html_report(df, metrics, OUTPUT_DIR)
+	df, metrics = build_dataframe(results)
+	csv_path = save_csv(df, metrics, OUTPUT_DIR)
+	html_path = make_html_report(df, metrics, OUTPUT_DIR)
 
-    print("Detected metrics:", ", ".join(metrics))
-    print("Wrote:")
-    print(" -", csv_path)
-    print(" -", html_path)
+	print("Detected metrics:", ", ".join(metrics))
+	print("Wrote:")
+	print(" -", csv_path)
+	print(" -", html_path)
 
 
 if __name__ == "__main__":
-    main()
+	main()
