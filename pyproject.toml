@@ -49,6 +49,20 @@ testpaths = ["tests"]
 # Target Python version
 target-version = "py311"
 
+# Line length (for formatter)
+line-length = 100
+
+# Where to apply autofix
+fix = true
+
+# Exclude common junk
+exclude = [
+    ".git",
+    ".ruff_cache",
+    ".venv",
+]
+
+[tool.ruff.lint]
 # Enable the most useful rule sets
 select = [
     "E",   # pycodestyle errors
@@ -69,19 +83,6 @@ ignore = [
     "E501",  # line length (handled by formatter)
     "B008",  # do not call function in default argument (too strict)
     "SIM105",# suppress "use contextlib.suppress" suggestion
-]
-
-# Line length (for formatter)
-line-length = 100
-
-# Where to apply autofix
-fix = true
-
-# Exclude common junk
-exclude = [
-    ".git",
-    ".ruff_cache",
-    ".venv",
 ]
 
 # isort-style import sorting
