@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "liver-eda-project"
-version = "1.2.0"
+version = "1.2.1"
 description = "Exploratory data analysis project using Orange3"
 requires-python = ">=3.10"
 
@@ -24,7 +24,7 @@ dependencies = [
 liver = "liver.cli:main"
 
 [tool.bumpversion]
-current_version = "1.2.0"
+current_version = "1.2.1"
 commit = true
 tag = true
 
