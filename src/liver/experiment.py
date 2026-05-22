@@ -1,14 +1,14 @@
 from functools import partial
 from itertools import chain
 from pathlib import Path
-import pandas as pd
+
 from loguru import logger
-
-from Orange.preprocess import PreprocessorList, Impute, Average, Continuize, Normalize
+from Orange.evaluation import AUC, CA, F1, MatthewsCorrCoefficient, Precision, Recall
 from Orange.evaluation.testing import TestOnTestData, sample
-from Orange.evaluation import Recall, F1, Precision, CA, AUC, MatthewsCorrCoefficient
+from Orange.preprocess import Average, Continuize, Impute, Normalize, PreprocessorList
+import pandas as pd
 
-from .load import load_dataset, load_configuration
+from .load import load_configuration, load_dataset
 from .utils import create_learners, dataset_report, profiler, root
 
 OUTPUT_DIR: Path = root("results")
@@ -61,9 +61,49 @@ class TestAndScore:
 			callback=progress_callback,
 		)  # type: ignore
 
-	def eval(self, metrics: dict, output_filename: str):
+	def eval(self, exprid: int, output_filename: str):
 		"""TODO: add docstring."""
-		for name, metric in metrics.items():
+		sick_index = healthy_index = None
+		if exprid in [2, 3]:
+			sick_index = list(self._scores.domain.class_var.values).index("Sick")
+			healthy_index = list(self._scores.domain.class_var.values).index("Healthy")
+
+		# TODO: decide which average to use for multiclass classification (e.g. weighted, macro, micro)
+		# TODO: decide which to use for binary classification
+		# NOTE: priority of the metrics is preserved from here!
+		# Will be ordered in the CSV file as here and plotting will keep this priority!
+		metrics: dict[int, dict] = {
+			1: {
+				"Recall(macro)": partial(Recall, average="macro"),
+				"F1(macro)": partial(F1, average="macro"),
+				"MCC": MatthewsCorrCoefficient,
+				"Precision(macro)": partial(Precision, average="macro"),
+				"AUC": AUC,
+				"CA": CA,
+			},
+			2: {
+				"Recall(Sick)": partial(Recall, target=sick_index),
+				"Recall(Healthy)": partial(Recall, target=healthy_index),
+				"Recall(macro)": partial(Recall, average="macro"),
+				"F1(Sick)": partial(F1, target=sick_index),
+				"F1(Healthy)": partial(F1, target=healthy_index),
+				"F1(macro)": partial(F1, average="macro"),
+				"MCC": MatthewsCorrCoefficient,
+				"Precision(Sick)": partial(Precision, target=sick_index),
+				"AUC": AUC,
+				"CA": CA,
+			},
+			3: {
+				"Recall(Sick)": partial(Recall, target=sick_index),
+				"F1(Sick)": partial(F1, target=sick_index),
+				"MCC": MatthewsCorrCoefficient,
+				"Precision(Sick)": partial(Precision, target=sick_index),
+				"AUC": AUC,
+				"CA": CA,
+			},
+		}
+
+		for name, metric in metrics[exprid].items():
 			values = metric(self._scores)
 			logger.debug(f"{name}: {values}")
 
@@ -73,7 +113,7 @@ class TestAndScore:
 		for i, learner in enumerate(self._learners):
 			row = {"Learner": repr(learner)}
 
-			for name, metric in metrics.items():
+			for name, metric in metrics[exprid].items():
 				values = metric(self._scores)
 				row[name] = values[i]
 
@@ -87,36 +127,7 @@ class TestAndScore:
 		df.to_csv(OUTPUT_DIR / output_filename, index=False)
 
 
-# TODO: decide which average to use for multiclass classification (e.g. weighted, macro, micro)
-METRICS: dict[int, dict] = {
-	1: {
-		"CA": CA,
-		"AUC": AUC,
-		"Precision(average=macro)": partial(Precision, average="macro"),
-		"Recall(average=macro)": partial(Recall, average="macro"),
-		"F1(average=macro)": partial(F1, average="macro"),
-		"MCC": MatthewsCorrCoefficient,
-	},
-	2: {
-		"CA": CA,
-		"AUC": AUC,
-		"Precision": Precision,
-		"Recall": Recall,
-		"F1": F1,
-		"MCC": MatthewsCorrCoefficient,
-	},
-	3: {
-		"CA": CA,
-		"AUC": AUC,
-		"Precision": Precision,
-		"Recall": Recall,
-		"F1": F1,
-		"MCC": MatthewsCorrCoefficient,
-	},
-}
-
-
-def main(exprid: int, learners_group: list, configuration: str = "global") -> None:
+def main(exprid: int, learners_group: list, configuration: str = "default") -> None:
 	"""TODO: write docstring."""
 	logger.info(f"Running experiment {exprid}")
 
@@ -147,4 +158,4 @@ def main(exprid: int, learners_group: list, configuration: str = "global") -> No
 
 	ts = TestAndScore(data, learners_to_evaluate)
 	ts.train()
-	ts.eval(METRICS[exprid], f"new-experiment{exprid}-evaluation-results.csv")
+	ts.eval(exprid, f"experiment{exprid}-{configuration}-evaluation-results.csv")

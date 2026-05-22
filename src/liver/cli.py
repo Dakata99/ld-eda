@@ -1,9 +1,11 @@
 import argparse
+
 import argcomplete
 
 
 def setup_logging(debug: bool = False) -> None:
 	import sys
+
 	from loguru import logger
 
 	logger.remove()
@@ -34,8 +36,8 @@ def main():
 	parser.add_argument(
 		"--config",
 		type=str,
-		choices=["global", "experiment1", "experiment2", "experiment3"],
-		default="global",
+		choices=["default", "global", "experiment1", "experiment2", "experiment3"],
+		default="default",
 		help="Configuration to use for the experiment",
 	)
 	parser.add_argument(
@@ -61,6 +63,6 @@ def main():
 
 		plot(
 			args.experiment,
-			f"new-experiment{args.experiment}-evaluation-results.csv",
-			f"new-experiment{args.experiment}.html",
+			f"experiment{args.experiment}-{args.config}-evaluation-results.csv",
+			f"experiment{args.experiment}-{args.config}.html",
 		)

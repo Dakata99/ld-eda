@@ -1,26 +1,23 @@
 from __future__ import annotations
-from pathlib import Path
-from loguru import logger
-from itertools import product
-import time
-import functools
 
 from collections import Counter
+import functools
+from itertools import product
 from pathlib import Path
+import time
 from typing import Any
 
-import numpy as np
 from loguru import logger
-from Orange.data import Table, Variable
-
+import numpy as np
 from Orange.classification import (
-	LogisticRegressionLearner,
-	RandomForestLearner,
-	TreeLearner,
 	GBClassifier,
+	LogisticRegressionLearner,
 	NNClassificationLearner,
+	RandomForestLearner,
 	SVMLearner,
+	TreeLearner,
 )
+from Orange.data import Table, Variable
 
 
 def root(*args):
@@ -28,10 +25,10 @@ def root(*args):
 	TODO: maybe find a better way?
 
 	Args:
-	    *args: path components to join with the project root.
+		*args: path components to join with the project root.
 
 	Returns:
-	    Path: the path to the project root joined with the provided path components.
+		Path: the path to the project root joined with the provided path components.
 	"""
 	return Path(__file__).resolve().parents[2].joinpath(*args)
 
@@ -40,9 +37,8 @@ def create_learners(config):
 	"""TODO: add docstring."""
 
 	# Helper function to get all combinations of hyperparameters
-	get_combinations = lambda params: [
-		dict(zip(params.keys(), combo)) for combo in product(*params.values())
-	]
+	def get_combinations(params):
+		return [dict(zip(params.keys(), combo, strict=True)) for combo in product(*params.values())]
 
 	# 1) Logistic regression
 	configuration = config["logistic-regression"]
@@ -184,8 +180,8 @@ def log_target_info(data: Table) -> None:
 	Log information about the target/class variable.
 
 	For a normal classification task, Orange should have:
-	    - exactly one class variable
-	    - the class variable should be discrete
+		- exactly one class variable
+		- the class variable should be discrete
 	"""
 	domain = data.domain
 

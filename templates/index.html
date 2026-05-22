@@ -128,7 +128,7 @@
 
         .summary-grid {
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 14px;
             margin-bottom: 22px;
         }
@@ -152,6 +152,41 @@
             font-weight: 800;
             color: #111827;
             word-break: break-word;
+        }
+
+        .family-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 14px;
+        }
+
+        .family-link-card {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 18px;
+            transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+        }
+
+        .family-link-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+            border-color: #bfdbfe;
+        }
+
+        .family-link-card strong {
+            display: block;
+            margin-bottom: 8px;
+            color: #111827;
+        }
+
+        .family-link-card span {
+            display: block;
+            color: var(--muted);
+            font-size: 0.92rem;
         }
 
         .heatmap-img {
@@ -178,15 +213,6 @@
             font-size: 0.92rem;
         }
 
-        .sortable-table th {
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .sortable-table th:hover {
-            background-color: #f0f0f0;
-        }
-
         th,
         td {
             padding: 10px 12px;
@@ -205,6 +231,14 @@
 
         tr:last-child td {
             border-bottom: none;
+        }
+
+        .notice {
+            border-left: 5px solid var(--primary);
+            background: var(--primary-soft);
+            border-radius: 14px;
+            padding: 16px 18px;
+            margin: 16px 0;
         }
 
         code {
@@ -238,6 +272,20 @@
 </head>
 
 <body>
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <div class="brand">Liver ML Metrics Report</div>
+
+            <div class="nav-links">
+                {% for item in nav_items %}
+                <a href="{{ item.file }}" class="{% if item.key == active_page %}active{% endif %}">
+                    {{ item.label }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </nav>
+
     <main class="page">
         <section class="hero">
             <h1>{{ report_title }}</h1>
@@ -245,7 +293,6 @@
                 This home page shows the overview heatmap only: the best configuration from each detected learner
                 family.
                 Individual learner-family pages are generated automatically from the CSV.
-                TODO!
             </p>
         </section>
 
@@ -262,64 +309,7 @@
                 <div class="value">{{ metrics_priority }}</div>
             </article>
         </section>
-
-        <section class="card">
-            <h2>Heatmap of evaluation metrics</h2>
-            <p>Priority for the metrics goes from hightes (left) to lowest (right).</p>
-            {{ heatmap | safe }}
-        </section>
-
-        <section class="card">
-            <h2>Evaluation results</h2>
-            {{ evaluation_results | safe }}
-        </section>
     </main>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const table = document.getElementById("results-table");
-            if (!table) return;
-
-            const headers = table.querySelectorAll("th");
-
-            headers.forEach((header, columnIndex) => {
-                header.style.cursor = "pointer";
-
-                header.addEventListener("click", () => {
-                    const tbody = table.querySelector("tbody");
-                    const rows = Array.from(tbody.querySelectorAll("tr"));
-
-                    const currentDirection = header.dataset.sortDirection || "asc";
-                    const newDirection = currentDirection === "asc" ? "desc" : "asc";
-
-                    headers.forEach(h => h.dataset.sortDirection = "");
-                    header.dataset.sortDirection = newDirection;
-
-                    rows.sort((rowA, rowB) => {
-                        const cellA = rowA.children[columnIndex].innerText.trim();
-                        const cellB = rowB.children[columnIndex].innerText.trim();
-
-                        const valueA = parseFloat(cellA);
-                        const valueB = parseFloat(cellB);
-
-                        const bothNumeric = !isNaN(valueA) && !isNaN(valueB);
-
-                        if (bothNumeric) {
-                            return newDirection === "asc"
-                                ? valueA - valueB
-                                : valueB - valueA;
-                        }
-
-                        return newDirection === "asc"
-                            ? cellA.localeCompare(cellB)
-                            : cellB.localeCompare(cellA);
-                    });
-
-                    rows.forEach(row => tbody.appendChild(row));
-                });
-            });
-        });
-    </script>
 </body>
 
 </html>

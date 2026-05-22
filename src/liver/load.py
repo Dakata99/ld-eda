@@ -1,10 +1,10 @@
 import json
-from loguru import logger
 from pathlib import Path
 
-from .utils import root
-
+from loguru import logger
 from Orange.data import Table
+
+from .utils import root
 
 # TODO: change this path!
 DATASETS_PATH: Path = root("datasets")
@@ -22,8 +22,8 @@ def load_dataset(dataset: str) -> Table:
 	"""Load file for the specified dataset.
 
 	Args:
-	    dataset (str): Name of the dataset to load.
-	                   Available options are: 'experiment1', 'experiment2', 'experiment3'.
+		dataset (str): Name of the dataset to load.
+						Available options are: 'experiment1', 'experiment2', 'experiment3'.
 	"""
 	path = DATASETS[dataset]
 	logger.info("Loading dataset from: {}", path)
@@ -39,10 +39,10 @@ def load_dataset(dataset: str) -> Table:
 	return data
 
 
-def load_configuration(config: str = "global") -> dict:
+def load_configuration(config: str = "default") -> dict:
 	"""TODO: write docstring."""
 
-	available_configs = ("global", "experiment1", "experiment2", "experiment3")
+	available_configs = ("default", "global", "experiment1", "experiment2", "experiment3")
 	if config not in available_configs:
 		raise ValueError(
 			f"Please, specify a valid configuration! Available are: {available_configs}"
@@ -50,7 +50,7 @@ def load_configuration(config: str = "global") -> dict:
 
 	configuration = root("configs", f"{config}.json")
 
-	with open(configuration, "r") as fd:
+	with open(configuration) as fd:
 		data = json.load(fd)
 
 	logger.success(f"Configuration loaded: {configuration}")

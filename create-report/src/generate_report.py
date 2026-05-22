@@ -2,16 +2,15 @@ from __future__ import annotations
 
 import argparse
 import base64
+from collections.abc import Iterable
 import io
-import re
 from pathlib import Path
-from typing import Iterable
+import re
 
+from jinja2 import Environment, FileSystemLoader
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
-from jinja2 import Environment, FileSystemLoader
-
 
 FAMILY_LABELS = {
 	"LogisticRegressionLearner": "Logistic Regression",
@@ -384,10 +383,7 @@ def render_family_page(
 
 	top_df = family_df.head(top_n)
 
-	if family_df.empty:
-		best_score = "N/A"
-	else:
-		best_score = f"{family_df.iloc[0][main_metric]:.4f}"
+	best_score = "N/A" if family_df.empty else f"{family_df.iloc[0][main_metric]:.4f}"
 
 	family_heatmap = create_heatmap(
 		df=top_df,

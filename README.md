@@ -6,6 +6,13 @@
 sudo snap install astral-uv --classic
 ```
 
+## Datasets
+
+The following datasets are being used for this EDA:
+- [indian-liver-disease-dataset](https://www.kaggle.com/datasets/paramjeetsinghds/indian-liver-disease-dataset)
+- [hcv-data](https://www.kaggle.com/datasets/visheshkkl/hcv-data)
+- [liver-data](https://www.kaggle.com/datasets/aichamalouche/liver-data)
+
 ## How to run?
 
 To evaluate the experiments, firstly setup the environment by:
@@ -16,16 +23,17 @@ source setupenv
 Then the `liver` command will be present and you can run `liver -h` to see what it does:
 ```bash
 $ liver -h
-usage: liver [-h] --experiment {1,2,3} [--debug] [--learner-group {all,logistic-regression,random-forest,tree,gradient-boosting,neural-network,svm}] [--config {global,experiment1,experiment2,experiment3}]
-             [--plot-only]
+usage: liver [-h] --experiment {1,2,3} [--debug]
+             [--learners-group {logistic-regression,random-forest,tree,gradient-boosting,neural-network,svm} [{logistic-regression,random-forest,tree,gradient-boosting,neural-network,svm} ...]]
+             [--config {default,global,experiment1,experiment2,experiment3}] [--plot-only]
 
 options:
   -h, --help            show this help message and exit
   --experiment {1,2,3}
   --debug               Enable debug logging
-  --learner-group {all,logistic-regression,random-forest,tree,gradient-boosting,neural-network,svm}
-                        Run a specific family of learners.
-  --config {global,experiment1,experiment2,experiment3}
+  --learners-group {logistic-regression,random-forest,tree,gradient-boosting,neural-network,svm} [{logistic-regression,random-forest,tree,gradient-boosting,neural-network,svm} ...]
+                        Run specific family(ies) of learners.
+  --config {default,global,experiment1,experiment2,experiment3}
                         Configuration to use for the experiment
   --plot-only           Plot only on already existing results.
 ```
@@ -118,14 +126,14 @@ where the parameters for each learners are added.
 
 #### Support machine vectors (SVM)
 
-| Field      | Type        | Orange's equivalent                     |
-|------------|-------------|-----------------------------------------|
-| `C`        | list(float) | Cost.                                   |
-| `kernel`   | str         | Kernel.                                 |
-| `gamma`    | list(int)   | Gamma (g) for Polynomial kernel.        |
-| `coef0`    | list(int)   | Used by Polynomial and Sigmoid kernels. |
-| `tol`      | list(float) | Numerical tolerance.                    |
-| `max_iter` | list(int)   | Iteration limit.                        |
+| Field      | Type        | Orange's equivalent                     | Notes                                   |
+|------------|-------------|-----------------------------------------|-----------------------------------------|
+| `C`        | list(float) | Cost.                                   |                                         |
+| `kernel`   | str         | Kernel.                                 |                                         |
+| `gamma`    | list(int)   | g                                       | Gamma (g) for Polynomial kernel.        |
+| `coef0`    | list(int)   | -                                       | Used by Polynomial and Sigmoid kernels. |
+| `tol`      | list(float) | Numerical tolerance.                    |                                         |
+| `max_iter` | list(int)   | Iteration limit.                        |                                         |
 
 > NOTE: the configuration for this learner presents dicts of dicts since different kernels have different parameters.
 
