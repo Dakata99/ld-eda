@@ -69,7 +69,6 @@ class TestAndScore:
 			healthy_index = list(self._scores.domain.class_var.values).index("Healthy")
 
 		# TODO: decide which average to use for multiclass classification (e.g. weighted, macro, micro)
-		# TODO: decide which to use for binary classification
 		# NOTE: priority of the metrics is preserved from here!
 		# Will be ordered in the CSV file as here and plotting will keep this priority!
 		metrics: dict[int, dict] = {
@@ -81,12 +80,11 @@ class TestAndScore:
 				"AUC": AUC,
 				"CA": CA,
 			},
+			# TODO: decide which to use for binary classification
 			2: {
 				"Recall(Sick)": partial(Recall, target=sick_index),
-				"Recall(Healthy)": partial(Recall, target=healthy_index),
 				"Recall(macro)": partial(Recall, average="macro"),
 				"F1(Sick)": partial(F1, target=sick_index),
-				"F1(Healthy)": partial(F1, target=healthy_index),
 				"F1(macro)": partial(F1, average="macro"),
 				"MCC": MatthewsCorrCoefficient,
 				"Precision(Sick)": partial(Precision, target=sick_index),
@@ -147,7 +145,7 @@ def main(exprid: int, learners_group: list, configuration: str = "default") -> N
 	learners = create_learners(config)
 	logger.debug(learners)
 
-	# 4) Evaluate
+	# 3) Evaluate
 	learners_to_evaluate = []
 	if learners_group is None:
 		learners_to_evaluate = list(chain.from_iterable(learners.values()))

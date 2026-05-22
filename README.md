@@ -1,5 +1,12 @@
 # Liver disease explorarory data analysis
 
+This projects aims to show a portfolio of machine learning algorithms for diagnozing liver diseases.
+The exploratory data analysis consists of 3 experimental scenarios:
+
+1) Multilabel classification of the biggest dataset
+2) Binary classification of the biggest dataset
+3) Binary classification of all 3 datasets
+
 ## Prerequisites
 
 ```bash
@@ -38,28 +45,32 @@ options:
   --plot-only           Plot only on already existing results.
 ```
 
+To check the generated results/report, run:
+```bash
+wslview results/experiment<experiment>-<config>.csv
+wslview reports/experiment<experiment>-<config>.html
+```
+
 ## Configuration files
 
 Configuration files are present at `configs` folder.
 The structure is as follows:
 ```json
 {
+{
     "logistic-regression": {
         "penalty": [
-            "l2",
-            "l1"
+            "l2"
         ],
         "C": [
-            0.1,
-            1,
-            5,
-            10
+            1.0
         ],
-        "class_weight": ["balanced"]
+        "class_weight": [
+            null
+        ]
     },
-    "random-forest": {
-        ...
     },
+    "random-forest": {...},
     "svm": {...},
     "gradient-boosting": {...},
     "tree": {...},
@@ -77,6 +88,8 @@ where the parameters for each learners are added.
 | `penalty`      | list(str) | Regularization type.        |
 | `C`            | list(int) | Strength (weak to strong).  |
 | `class_weight` | str       | Balance class distribution. |
+
+> NOTE: `class_weight` parameters accepts `None` or `balanced` values.
 
 #### Random forest
 

@@ -1,103 +1,153 @@
 {
     "logistic-regression": {
-        "C": [
-            0.1,
-            1,
-            5,
-            10
-        ],
         "penalty": [
             "l2",
             "l1"
+        ],
+        "C": [
+            0.05,
+            0.1,
+            0.5,
+            1.0,
+            2.0,
+            5.0
+        ],
+        "class_weight": [
+            "balanced"
         ]
     },
     "random-forest": {
         "n_estimators": [
             100,
-            300
+            200
+        ],
+        "max_features": [
+            "sqrt",
+            "log2"
+        ],
+        "random_state": [
+            42
+        ],
+        "class_weight": [
+            "balanced"
         ],
         "max_depth": [
             null,
             10,
-            20
+            20,
+            30
         ],
-        "min_samples_leaf": [
-            1,
+        "min_samples_split": [
+            2,
             5
         ]
     },
-    "svm": [
-        {
-            "kernel": [
-                "linear"
-            ],
-            "C": [
-                0.1,
-                1,
-                10
-            ]
-        },
-        {
-            "kernel": [
-                "rbf"
-            ],
-            "C": [
-                0.1,
-                1,
-                10
-            ],
-            "gamma": [
-                "scale",
-                0.01,
-                0.001
-            ]
-        }
-    ],
+    "tree": {
+        "binarize": [
+            false,
+            true
+        ],
+        "min_samples_leaf": [
+            1,
+            5,
+            10
+        ],
+        "min_samples_split": [
+            2,
+            5,
+            10
+        ],
+        "max_depth": [
+            null,
+            10,
+            20,
+            30
+        ],
+        "sufficient_majority": [
+            0.90,
+            0.95
+        ]
+    },
     "gradient-boosting": {
         "n_estimators": [
             100,
-            300
+            200
         ],
         "learning_rate": [
+            0.03,
             0.05,
             0.1
+        ],
+        "random_state": [
+            42
         ],
         "max_depth": [
             2,
             3
-        ]
-    },
-    "tree": {
-        "max_depth": [
-            null,
-            5,
-            10
         ],
-        "min_samples_leaf": [
-            1,
-            5,
-            10
+        "min_samples_split": [
+            2,
+            5
+        ],
+        "subsample": [
+            0.8,
+            1.0
         ]
     },
     "neural-network": {
         "hidden_layer_sizes": [
             [
-                50
+                100
             ],
             [
-                100
+                100,
+                50
             ],
             [
                 50,
                 50
             ]
         ],
+        "activation": [
+            "relu",
+            "tanh"
+        ],
+        "solver": [
+            "adam"
+        ],
         "alpha": [
             0.0001,
             0.001
         ],
         "max_iter": [
-            300
+            500
+        ],
+        "random_state": [
+            42
         ]
-    }
+    },
+    "svm": [
+        {
+            "C": [
+                0.1,
+                1.0,
+                10.0
+            ],
+            "kernel": [
+                "linear"
+            ]
+        },
+        {
+            "C": [
+                1.0,
+                10.0
+            ],
+            "kernel": [
+                "rbf"
+            ],
+            "gamma": [
+                "scale"
+            ]
+        }
+    ]
 }
