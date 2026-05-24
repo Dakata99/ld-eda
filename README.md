@@ -1,4 +1,4 @@
-# Liver disease explorarory data analysis
+# Experimental machine learning study for liver disease classification
 
 This projects aims to show a portfolio of machine learning algorithms for diagnozing liver diseases.
 The exploratory data analysis consists of 3 experimental scenarios:
@@ -15,7 +15,7 @@ sudo snap install astral-uv --classic
 
 ## Datasets
 
-The following datasets are being used for this EDA:
+The following datasets are being used:
 - [indian-liver-disease-dataset](https://www.kaggle.com/datasets/paramjeetsinghds/indian-liver-disease-dataset)
 - [hcv-data](https://www.kaggle.com/datasets/visheshkkl/hcv-data)
 - [liver-data](https://www.kaggle.com/datasets/aichamalouche/liver-data)
