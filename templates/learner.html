@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ page_title }}</title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <div class="brand">LD EDA Report</div>
+
+            <div class="nav-links">
+                {% for item in nav_items %}
+                <a href="{{ item.file }}" class="{% if item.key == active_page %}active{% endif %}">
+                    {{ item.label }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="page">
+        <section class="hero">
+            <h1>{{ report_title }}</h1>
+        </section>
+
+        <section class="summary-grid">
+            <article class="summary-card">
+                <div class="label">Learners (rows) in CSV</div>
+                <div class="value">{{ total_rows }}</div>
+            </article>
+
+            <article class="summary-card">
+                <div class="label">Metrics priority (#{{ num_metrics }})</div>
+                <div class="value">{{ metrics_priority }}</div>
+            </article>
+        </section>
+
+        <section class="card">
+            <h2>Heatmap of evaluation metrics</h2>
+            <p>Only the first {{ top_n }} learners are shown.</p>
+            <p>Priority for the metrics goes from highest (left) to lowest (right).</p>
+            {{ heatmap | safe }}
+        </section>
+
+        <section class="card">
+            <h2>Evaluation results</h2>
+            <p>Full table with evaluation results.</p>
+            <p>Sorting by column is available.</p>
+            <div class="table table-striped table-bordered" style="overflow-x: auto; width: 100%; margin: 0;">
+                {{ evaluation_results | safe }}
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const table = document.getElementById("results-table");
+            if (!table) return;
+
+            const headers = table.querySelectorAll("th");
+
+            headers.forEach((header, columnIndex) => {
+                header.style.cursor = "pointer";
+
+                header.addEventListener("click", () => {
+                    const tbody = table.querySelector("tbody");
+                    const rows = Array.from(tbody.querySelectorAll("tr"));
+
+                    const currentDirection = header.dataset.sortDirection || "asc";
+                    const newDirection = currentDirection === "asc" ? "desc" : "asc";
+
+                    headers.forEach(h => h.dataset.sortDirection = "");
+                    header.dataset.sortDirection = newDirection;
+
+                    rows.sort((rowA, rowB) => {
+                        const cellA = rowA.children[columnIndex].innerText.trim();
+                        const cellB = rowB.children[columnIndex].innerText.trim();
+
+                        const valueA = parseFloat(cellA);
+                        const valueB = parseFloat(cellB);
+
+                        const bothNumeric = !isNaN(valueA) && !isNaN(valueB);
+
+                        if (bothNumeric) {
+                            return newDirection === "asc"
+                                ? valueA - valueB
+                                : valueB - valueA;
+                        }
+
+                        return newDirection === "asc"
+                            ? cellA.localeCompare(cellB)
+                            : cellB.localeCompare(cellA);
+                    });
+
+                    rows.forEach(row => tbody.appendChild(row));
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

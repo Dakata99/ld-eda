@@ -3,15 +3,77 @@ from itertools import chain
 from pathlib import Path
 
 from loguru import logger
+from Orange.data import Table
 from Orange.evaluation import AUC, CA, F1, MatthewsCorrCoefficient, Precision, Recall
-from Orange.evaluation.testing import TestOnTestData, sample
+from Orange.evaluation.testing import TestOnTestData
 from Orange.preprocess import Average, Continuize, Impute, Normalize, PreprocessorList
 import pandas as pd
 
 from .load import load_configuration, load_dataset
 from .utils import create_learners, dataset_report, profiler, root
+from .cli import CSV_FILE
+
+import numpy as np
+from sklearn.model_selection import StratifiedShuffleSplit, ShuffleSplit
+from Orange.data import Table
 
 OUTPUT_DIR: Path = root("results")
+
+
+def data_sampler(
+	data: Table,
+	proportion: float = 0.8,
+	stratified: bool = True,
+	random_state: int | None = 42,
+) -> tuple[Table, Table]:
+	"""
+	Orange Data Sampler-like fixed proportion split.
+
+	Returns:
+	    train, test: where train corresponds to Orange's "Data Sample" and test corresponds to Orange's "Remaining Data".
+	"""
+
+	if not (0 < proportion < 1):
+		raise ValueError("Proportion must be between 0 and 1, e.g. 0.8")
+
+	n_rows = len(data)
+
+	# Orange Data Sampler uses ceil for fixed percentage sampling.
+	sample_size = int(np.ceil(proportion * n_rows))
+	remaining_size = n_rows - sample_size
+
+	if sample_size <= 0 or remaining_size <= 0:
+		raise ValueError(f"Invalid split sizes: sample={sample_size}, remaining={remaining_size}")
+
+	x_dummy = np.arange(n_rows).reshape(-1, 1)
+
+	can_stratify = (
+		stratified and data.domain.class_var is not None and data.domain.class_var.is_discrete
+	)
+
+	if can_stratify:
+		y = np.asarray(data.Y).ravel()
+
+		splitter = StratifiedShuffleSplit(
+			n_splits=1,
+			train_size=remaining_size,
+			test_size=sample_size,
+			random_state=random_state,
+		)
+		remaining_idx, sample_idx = next(splitter.split(x_dummy, y))
+	else:
+		splitter = ShuffleSplit(
+			n_splits=1,
+			train_size=remaining_size,
+			test_size=sample_size,
+			random_state=random_state,
+		)
+		remaining_idx, sample_idx = next(splitter.split(x_dummy))
+
+	train = data[sample_idx]  # Orange: Data Sample
+	test = data[remaining_idx]  # Orange: Remaining Data
+
+	return train, test
 
 
 class TestAndScore:
@@ -34,10 +96,18 @@ class TestAndScore:
 		self._scores = None
 
 	@profiler
-	def train(self):
+	def train(self, exprid: int):
 		"""TODO: add docstring."""
 		# Split the data into train and test sets (80% train, 20% test, stratified, random state for reproducibility)
-		train, test = sample(self._data, n=0.8, stratified=True, random_state=42)
+		# train, test = data_sampler(
+		# 	self._data,
+		# 	0.8,
+		# 	True,
+		# 	42
+		# )
+
+		train = Table(str(root("datasets", f"expr{exprid}", f"expr{exprid}-train-data.tab")))
+		test = Table(str(root("datasets", f"expr{exprid}", f"expr{exprid}-test-data.tab")))
 
 		def progress_callback(progress: float) -> None:
 			done = round(progress * len(self._learners))
@@ -68,24 +138,25 @@ class TestAndScore:
 			sick_index = list(self._scores.domain.class_var.values).index("Sick")
 			healthy_index = list(self._scores.domain.class_var.values).index("Healthy")
 
-		# TODO: decide which average to use for multiclass classification (e.g. weighted, macro, micro)
 		# NOTE: priority of the metrics is preserved from here!
 		# Will be ordered in the CSV file as here and plotting will keep this priority!
 		metrics: dict[int, dict] = {
 			1: {
-				"Recall(macro)": partial(Recall, average="macro"),
-				"F1(macro)": partial(F1, average="macro"),
+				"Recall(weighted)": partial(Recall, target=None, average="weighted"),
+				"F1(weighted)": partial(F1, target=None, average="weighted"),
 				"MCC": MatthewsCorrCoefficient,
-				"Precision(macro)": partial(Precision, average="macro"),
+				"Precision(weighted)": partial(Precision, target=None, average="weighted"),
 				"AUC": AUC,
 				"CA": CA,
+				"Recall(macro)": partial(Recall, average="macro"),
+				"F1(macro)": partial(F1, average="macro"),
+				"Precision(macro)": partial(Precision, average="macro"),
 			},
-			# TODO: decide which to use for binary classification
 			2: {
 				"Recall(Sick)": partial(Recall, target=sick_index),
-				"Recall(macro)": partial(Recall, average="macro"),
+				"Recall(weighted)": partial(Recall, average="weighted"),
 				"F1(Sick)": partial(F1, target=sick_index),
-				"F1(macro)": partial(F1, average="macro"),
+				"F1(weighted)": partial(F1, average="weighted"),
 				"MCC": MatthewsCorrCoefficient,
 				"Precision(Sick)": partial(Precision, target=sick_index),
 				"AUC": AUC,
@@ -93,7 +164,9 @@ class TestAndScore:
 			},
 			3: {
 				"Recall(Sick)": partial(Recall, target=sick_index),
+				"Recall(weighted)": partial(Recall, average="weighted"),
 				"F1(Sick)": partial(F1, target=sick_index),
+				"F1(weighted)": partial(F1, average="weighted"),
 				"MCC": MatthewsCorrCoefficient,
 				"Precision(Sick)": partial(Precision, target=sick_index),
 				"AUC": AUC,
@@ -101,20 +174,14 @@ class TestAndScore:
 			},
 		}
 
-		for name, metric in metrics[exprid].items():
-			values = metric(self._scores)
-			logger.debug(f"{name}: {values}")
-
 		# Write results into a CSV file
 		rows = []
 		# Loop through learners
 		for i, learner in enumerate(self._learners):
 			row = {"Learner": repr(learner)}
-
 			for name, metric in metrics[exprid].items():
 				values = metric(self._scores)
 				row[name] = values[i]
-
 			rows.append(row)
 
 		df = pd.DataFrame(rows)
@@ -155,5 +222,5 @@ def main(exprid: int, learners_group: list, configuration: str = "default") -> N
 				learners_to_evaluate.extend(learners[group])
 
 	ts = TestAndScore(data, learners_to_evaluate)
-	ts.train()
-	ts.eval(exprid, f"experiment{exprid}-{configuration}-evaluation-results.csv")
+	ts.train(exprid)
+	ts.eval(exprid, CSV_FILE.format(experiment=exprid, config=configuration))

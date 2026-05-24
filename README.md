@@ -150,6 +150,7 @@ where the parameters for each learners are added.
 
 > NOTE: the configuration for this learner presents dicts of dicts since different kernels have different parameters.
 
-## Limitations
+## Known issues && limitations
 
 - It can't be made when a parameter is disabled or not since passing `null` in the JSON will result in `None` value in Python, which may not be correct for some parameters of some learners.
+- `Orange.evaluation.testing.sample()` uses a different splitting implementation/row-selection logic than Orange GUI’s Data Sampler widget, so the same `n=0.8`, `stratified=True`, and `random_state=42` do not guarantee the same train/test rows.

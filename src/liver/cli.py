@@ -2,6 +2,18 @@ import argparse
 
 import argcomplete
 
+AVAILABLE_CONFIGS: tuple[str] = (
+	"default",
+	"default-full",
+	"global",
+	"experiment1",
+	"experiment2",
+	"experiment3",
+)
+
+CSV_FILE: str = "experiment{experiment}-{config}.csv"
+HTML_FILE: str = "experiment{experiment}-{config}.html"
+
 
 def setup_logging(debug: bool = False) -> None:
 	import sys
@@ -36,7 +48,7 @@ def main():
 	parser.add_argument(
 		"--config",
 		type=str,
-		choices=["default", "global", "experiment1", "experiment2", "experiment3"],
+		choices=AVAILABLE_CONFIGS,
 		default="default",
 		help="Configuration to use for the experiment",
 	)
@@ -63,6 +75,6 @@ def main():
 
 		plot(
 			args.experiment,
-			f"experiment{args.experiment}-{args.config}-evaluation-results.csv",
-			f"experiment{args.experiment}-{args.config}.html",
+			CSV_FILE.format(experiment=args.experiment, config=args.config),
+			HTML_FILE.format(experiment=args.experiment, config=args.config),
 		)
