@@ -142,7 +142,11 @@ def main(exprid: int, filename: str, outputfile: str):
 		evaluation_results=df.to_html(index=False, table_id="results-table"),
 	)
 
-	output_file: Path = root("reports", outputfile)
+	expr = root("reports", f"expr{exprid}")
+	if not expr.exists():
+		expr.mkdir(parents=True)
+
+	output_file: Path = root("reports", expr / outputfile)
 	output_file.parent.mkdir(parents=True, exist_ok=True)
 	output_file.write_text(index, encoding="utf-8")
 
@@ -170,11 +174,11 @@ def main(exprid: int, filename: str, outputfile: str):
 			evaluation_results=famdf.to_html(index=False, table_id="results-table"),
 		)
 
-		ofile: Path = root("reports", f"{FAMILY_TO_FILE_MAPPING[family]}.html")
+		ofile: Path = root("reports", expr / f"{FAMILY_TO_FILE_MAPPING[family]}.html")
 		ofile.parent.mkdir(parents=True, exist_ok=True)
 		ofile.write_text(page, encoding="utf-8")
 
 		logger.success(f"HTML report generated: {ofile}")
 
 	# Copy CSS file next to generated files
-	shutil.copy(root("templates/styles.css"), root("reports/styles.css"))
+	shutil.copy(root("templates/styles.css"), expr)

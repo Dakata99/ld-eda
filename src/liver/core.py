@@ -11,5 +11,5 @@ def run_analysis(exprid: int, learners_group: list, config: str = "default") -> 
 	plot(
 		exprid,
 		CSV_FILE.format(experiment=exprid, config=config),
-		HTML_FILE.format(experiment=exprid, config=config),
+		HTML_FILE.format(config=config),
 	)

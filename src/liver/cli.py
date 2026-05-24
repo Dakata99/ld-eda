@@ -12,7 +12,7 @@ AVAILABLE_CONFIGS: tuple[str] = (
 )
 
 CSV_FILE: str = "experiment{experiment}-{config}.csv"
-HTML_FILE: str = "experiment{experiment}-{config}.html"
+HTML_FILE: str = "{config}.html"
 
 
 def setup_logging(debug: bool = False) -> None:
@@ -76,5 +76,5 @@ def main():
 		plot(
 			args.experiment,
 			CSV_FILE.format(experiment=args.experiment, config=args.config),
-			HTML_FILE.format(experiment=args.experiment, config=args.config),
+			HTML_FILE.format(config=args.config),
 		)
