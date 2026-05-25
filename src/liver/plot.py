@@ -96,7 +96,7 @@ def main(exprid: int, method: str, config: str):
 	for family in families:
 		famdf = df[df["Family"] == family]
 		# famdf = famdf.sort_values(by=metrics, ascending=[False] * len(metrics))
-		HEATMAPS[family] = heatmap(famdf)
+		HEATMAPS[family] = heatmap(famdf.head(TOP_20))
 
 	# 2) Generate heatmap
 	HEATMAPS["overview"] = heatmap(df.head(TOP_20))
