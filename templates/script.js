@@ -361,7 +361,7 @@ function updateComparison(table, theadRow, selectedRows, comparisonResult) {
                     <th>Baseline (${rowALabel})</th>
                     <th>Candidate (${rowBLabel})</th>
                     <th>Delta (${rowBLabel} - ${rowALabel})</th>
-                    <th>Relative delta</th>
+                    <th>Delta (%)</th>
                     <th>Interpretation</th>
                 </tr>
             </thead>

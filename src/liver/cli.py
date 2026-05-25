@@ -11,8 +11,6 @@ AVAILABLE_CONFIGS: tuple[str] = (
 	"experiment3",
 )
 
-CSV_FILE: str = "experiment{experiment}-{config}.csv"
-
 
 def setup_logging(debug: bool = False) -> None:
 	import sys
@@ -57,23 +55,35 @@ def main():
 		default=False,
 		help="Plot only on already existing results.",
 	)
+	mt = parser.add_mutually_exclusive_group()
+	mt.add_argument(
+		'--cross-validation',
+		action="store_true",
+		default=False,
+		help='Use CrossValidation method'
+	)
+	mt.add_argument(
+		'--test-on-test-data',
+		action="store_true",
+		default=True,
+		help='Use TestOnTestData method'
+	)
 	argcomplete.autocomplete(parser)
 	args = parser.parse_args()
 
 	# Set up logging
 	setup_logging(args.debug)
 
+	# Method for evaluation, totd = test on test data
+	method = 'cv' if args.cross_validation else 'totd'
+
 	if not args.plot_only:
 		# Run the analysis for the specified experiment
 		from .core import run_analysis
 
-		run_analysis(args.experiment, args.learners_group, args.config)
+		run_analysis(args.experiment, method, args.learners_group, args.config)
 	else:
 		# Plot the results for the specified experiment
 		from .plot import main as plot
 
-		plot(
-			args.experiment,
-			args.config,
-			CSV_FILE.format(experiment=args.experiment, config=args.config),
-		)
+		plot(args.experiment, method, args.config)

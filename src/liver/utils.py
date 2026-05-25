@@ -34,8 +34,7 @@ def root(*args):
 
 
 def create_learners(config):
-	"""TODO: add docstring."""
-
+	"""Create all combinations of learners by the specified configuration."""
 	# Helper function to get all combinations of hyperparameters
 	def get_combinations(params):
 		return [dict(zip(params.keys(), combo, strict=True)) for combo in product(*params.values())]

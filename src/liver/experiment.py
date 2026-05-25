@@ -5,84 +5,23 @@ from pathlib import Path
 from loguru import logger
 from Orange.data import Table
 from Orange.evaluation import AUC, CA, F1, MatthewsCorrCoefficient, Precision, Recall
-from Orange.evaluation.testing import TestOnTestData
+from Orange.evaluation.testing import TestOnTestData, CrossValidation
 from Orange.preprocess import Average, Continuize, Impute, Normalize, PreprocessorList
 import pandas as pd
 
 from .load import load_configuration, load_dataset
 from .utils import create_learners, dataset_report, profiler, root
-from .cli import CSV_FILE
 
-import numpy as np
-from sklearn.model_selection import StratifiedShuffleSplit, ShuffleSplit
 from Orange.data import Table
 
 OUTPUT_DIR: Path = root("results")
-
-
-def data_sampler(
-	data: Table,
-	proportion: float = 0.8,
-	stratified: bool = True,
-	random_state: int | None = 42,
-) -> tuple[Table, Table]:
-	"""
-	Orange Data Sampler-like fixed proportion split.
-
-	Returns:
-	    train, test: where train corresponds to Orange's "Data Sample" and test corresponds to Orange's "Remaining Data".
-	"""
-
-	if not (0 < proportion < 1):
-		raise ValueError("Proportion must be between 0 and 1, e.g. 0.8")
-
-	n_rows = len(data)
-
-	# Orange Data Sampler uses ceil for fixed percentage sampling.
-	sample_size = int(np.ceil(proportion * n_rows))
-	remaining_size = n_rows - sample_size
-
-	if sample_size <= 0 or remaining_size <= 0:
-		raise ValueError(f"Invalid split sizes: sample={sample_size}, remaining={remaining_size}")
-
-	x_dummy = np.arange(n_rows).reshape(-1, 1)
-
-	can_stratify = (
-		stratified and data.domain.class_var is not None and data.domain.class_var.is_discrete
-	)
-
-	if can_stratify:
-		y = np.asarray(data.Y).ravel()
-
-		splitter = StratifiedShuffleSplit(
-			n_splits=1,
-			train_size=remaining_size,
-			test_size=sample_size,
-			random_state=random_state,
-		)
-		remaining_idx, sample_idx = next(splitter.split(x_dummy, y))
-	else:
-		splitter = ShuffleSplit(
-			n_splits=1,
-			train_size=remaining_size,
-			test_size=sample_size,
-			random_state=random_state,
-		)
-		remaining_idx, sample_idx = next(splitter.split(x_dummy))
-
-	train = data[sample_idx]  # Orange: Data Sample
-	test = data[remaining_idx]  # Orange: Remaining Data
-
-	return train, test
+CSV_FILE: str = "experiment{experiment}-{config}-{method}.csv"
 
 
 class TestAndScore:
 	def __init__(self, data, learners: list):
 		self._data = data
 		self._learners = learners
-		# TODO: somehow verify that the preprocessor is working correctly
-		# (e.g. check for NaNs, check that features are continuous, etc.)
-		# data = preprocessor(data)
 		self._preprocessor = PreprocessorList(
 			preprocessors=(
 				# Average/Most frequent
@@ -96,43 +35,50 @@ class TestAndScore:
 		self._scores = None
 
 	@profiler
-	def train(self, exprid: int):
-		"""TODO: add docstring."""
-		# Split the data into train and test sets (80% train, 20% test, stratified, random state for reproducibility)
-		# train, test = data_sampler(
-		# 	self._data,
-		# 	0.8,
-		# 	True,
-		# 	42
-		# )
-
+	def train(self, exprid: int, method: str):
+		"""Method for training learnears."""
+		# Load training data
 		train = Table(str(root("datasets", f"expr{exprid}", f"expr{exprid}-train-data.tab")))
-		test = Table(str(root("datasets", f"expr{exprid}", f"expr{exprid}-test-data.tab")))
 
-		def progress_callback(progress: float) -> None:
-			done = round(progress * len(self._learners))
-			logger.info(
-				"Finished {}/{} learners ({:.2f}%)",
-				done,
-				len(self._learners),
-				progress * 100,
+		# Evaluate models with the chosen method
+		if method == 'cv':
+			logger.info(f"CrossValidation: evaluating {len(self._learners)} learners...")
+			def progress_callback(progress: float) -> None:
+				logger.info("Progress: {:.2f}%", round(progress * 100))
+
+			cv = CrossValidation()
+			self._scores = cv(
+				train,
+				self._learners,
+				preprocessor=self._preprocessor,
+				callback=progress_callback,
 			)
+		else:
+			logger.info(f"TestOnTestData: evaluating {len(self._learners)} learners...")
+			# Evaluate using TestOnTestData (train on train set, test on test set)
+			def progress_callback(progress: float) -> None:
+				done = round(progress * len(self._learners))
+				logger.info(
+					"Finished {}/{} learners ({:.2f}%)",
+					done,
+					len(self._learners),
+					progress * 100,
+				)
 
-		logger.info(f"Evaluating {len(self._learners)} learners...")
+			test = Table(str(root("datasets", f"expr{exprid}", f"expr{exprid}-test-data.tab")))
 
-		# Evaluate using TestOnTestData (train on train set, test on test set)
-		# Set store_data to True if we want to keep the augmented data with predictions, probabilities, etc.
-		evaluator = TestOnTestData(store_data=False)
-		self._scores = evaluator(
-			train,
-			test,
-			self._learners,
-			preprocessor=self._preprocessor,
-			callback=progress_callback,
-		)  # type: ignore
+			# Set store_data to True if we want to keep the augmented data with predictions, probabilities, etc.
+			evaluator = TestOnTestData(store_data=False)
+			self._scores = evaluator(
+				train,
+				test,
+				self._learners,
+				preprocessor=self._preprocessor,
+				callback=progress_callback,
+			)  # type: ignore
 
 	def eval(self, exprid: int, output_filename: str):
-		"""TODO: add docstring."""
+		"""Metrics evalution."""
 		sick_index = healthy_index = None
 		if exprid in [2, 3]:
 			sick_index = list(self._scores.domain.class_var.values).index("Sick")
@@ -189,8 +135,8 @@ class TestAndScore:
 		df.to_csv(OUTPUT_DIR / output_filename, index=False)
 
 
-def main(exprid: int, learners_group: list, configuration: str = "default") -> None:
-	"""TODO: write docstring."""
+def main(exprid: int, method: str, learners_group: list, configuration: str = "default") -> None:
+	"""Main function for evaluation an experiment."""
 	logger.info(f"Running experiment {exprid}")
 
 	# 1) Load the dataset (CSV file)
@@ -219,5 +165,5 @@ def main(exprid: int, learners_group: list, configuration: str = "default") -> N
 				learners_to_evaluate.extend(learners[group])
 
 	ts = TestAndScore(data, learners_to_evaluate)
-	ts.train(exprid)
-	ts.eval(exprid, CSV_FILE.format(experiment=exprid, config=configuration))
+	ts.train(exprid, method)
+	ts.eval(exprid, CSV_FILE.format(experiment=exprid, config=configuration, method=method))

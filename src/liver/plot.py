@@ -68,9 +68,9 @@ def heatmap(df: pd.DataFrame):
 	)
 
 
-def main(exprid: int, config: str, filename: str):
+def main(exprid: int, method: str, config: str):
 	# 1) Load the results (CSV file) into a DataFrame
-	fd = root("results", filename)
+	fd = root("results", f"experiment{exprid}-{config}-{method}.csv")
 	if not fd.exists():
 		raise FileNotFoundError(f"Results file not found: {fd}")
 
@@ -142,7 +142,7 @@ def main(exprid: int, config: str, filename: str):
 		evaluation_results=df.drop(columns=["Family"]).to_html(index=False, table_id="results-table"),
 	)
 
-	expr = root("reports", f"expr{exprid}-{config}")
+	expr = root("reports", f"expr{exprid}-{config}-{method}")
 	if not expr.exists():
 		expr.mkdir(parents=True)
 

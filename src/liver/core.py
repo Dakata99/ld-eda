@@ -1,15 +1,10 @@
 from .experiment import main as experiment
 from .plot import main as plot
-from .cli import CSV_FILE
 
 
-def run_analysis(exprid: int, learners_group: list, config: str = "default") -> None:
+def run_analysis(exprid: int, method: str, learners_group: list, config: str = "default") -> None:
 	# Run the experiment
-	experiment(exprid, learners_group, config)
+	experiment(exprid, method, learners_group, config)
 
 	# Plot the results
-	plot(
-		exprid,
-		config,
-		CSV_FILE.format(experiment=exprid, config=config)
-	)
+	plot(exprid, method, config)

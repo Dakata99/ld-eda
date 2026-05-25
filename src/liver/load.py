@@ -9,9 +9,6 @@ from .cli import AVAILABLE_CONFIGS
 
 DATASETS_PATH: Path = root("datasets")
 DATASETS: dict[str, Path] = {
-	# "indian": DATASETS_PATH / "indian-liver-disease-dataset/Training_indian_liver_disease_dataset.csv",
-	# "hcv": DATASETS_PATH / "hcv-data/hcvdat0.csv",
-	# "liver": DATASETS_PATH / "liver-data/cleaned_data.csv",
 	"experiment1": DATASETS_PATH / "expr1" / "experiment1.tab",
 	"experiment2": DATASETS_PATH / "expr2" / "experiment2.tab",
 	"experiment3": DATASETS_PATH / "expr3" / "experiment3.tab",
@@ -40,7 +37,7 @@ def load_dataset(dataset: str) -> Table:
 
 
 def load_configuration(config: str = "default") -> dict:
-	"""TODO: write docstring."""
+	"""Load configuration (JSON) file."""
 
 	if config not in AVAILABLE_CONFIGS:
 		raise ValueError(
