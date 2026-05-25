@@ -5,11 +5,14 @@
         ],
         "max_iter": [
             10000
+        ],
+        "random_state": [
+            0
         ]
     },
     "random-forest": {
         "random_state": [
-            42
+            0
         ],
         "class_weight": [
             "balanced"
@@ -34,12 +37,12 @@
     },
     "gradient-boosting": {
         "random_state": [
-            42
+            0
         ]
     },
     "neural-network": {
         "random_state": [
-            42
+            1
         ]
     },
     "svm": [

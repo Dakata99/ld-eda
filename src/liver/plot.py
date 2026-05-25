@@ -139,7 +139,7 @@ def main(exprid: int, config: str, filename: str):
 		top_n=TOP_20,
 		heatmap=HEATMAPS["overview"],
 		# Evaluation results card
-		evaluation_results=df.to_html(index=False, table_id="results-table"),
+		evaluation_results=df.drop(columns=["Family"]).to_html(index=False, table_id="results-table"),
 	)
 
 	expr = root("reports", f"expr{exprid}-{config}")
@@ -171,7 +171,7 @@ def main(exprid: int, config: str, filename: str):
 			top_n=TOP_20,
 			heatmap=HEATMAPS[family],
 			# Evaluation results card
-			evaluation_results=famdf.to_html(index=False, table_id="results-table"),
+			evaluation_results=famdf.drop(columns=["Family"]).to_html(index=False, table_id="results-table"),
 		)
 
 		ofile: Path = root("reports", expr / f"{FAMILY_TO_FILE_MAPPING[family]}.html")
