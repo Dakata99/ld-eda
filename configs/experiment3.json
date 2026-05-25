@@ -1,51 +1,52 @@
 {
     "logistic-regression": {
-        "penalty": [
-            "l2",
-            "l1"
-        ],
-        "C": [
-            0.05,
-            0.1,
-            0.5,
-            1.0,
-            2.0
-        ],
         "class_weight": [
             "balanced"
+        ],
+        "max_iter": [
+            10000
+        ],
+        "random_state": [
+            0
+        ],
+        "penalty": [
+            "l2"
+        ],
+        "C": [
+            0.03,
+            0.1,
+            0.3,
+            1.0
         ]
     },
     "random-forest": {
-        "n_estimators": [
-            100,
-            200,
-            300
-        ],
-        "max_features": [
-            "sqrt",
-            "log2"
-        ],
         "random_state": [
-            42
+            0
         ],
         "class_weight": [
             "balanced"
+        ],
+        "min_samples_split": [
+            5,
+            10,
+            20
+        ],
+        "n_estimators": [
+            100,
+            200
+        ],
+        "max_features": [
+            "sqrt"
         ],
         "max_depth": [
             5,
             10,
             20,
             null
-        ],
-        "min_samples_split": [
-            2,
-            5,
-            10
         ]
     },
     "tree": {
         "binarize": [
-            false,
             true
         ],
         "min_samples_leaf": [
@@ -54,21 +55,20 @@
             20
         ],
         "min_samples_split": [
-            2,
-            5,
-            10
-        ],
-        "max_depth": [
-            5,
             10,
             20,
-            null
+            50
         ],
-        "sufficient_majority": [
-            0.95
+        "max_depth": [
+            3,
+            5,
+            10
         ]
     },
     "gradient-boosting": {
+        "random_state": [
+            0
+        ],
         "n_estimators": [
             50,
             100,
@@ -79,39 +79,38 @@
             0.05,
             0.1
         ],
-        "random_state": [
-            42
-        ],
         "max_depth": [
+            1,
             2,
             3
         ],
         "min_samples_split": [
-            2,
-            5
+            5,
+            10
         ],
         "subsample": [
-            0.7,
             0.8,
             1.0
         ]
     },
     "neural-network": {
+        "random_state": [
+            1
+        ],
         "hidden_layer_sizes": [
             [
-                50
+                32
             ],
             [
-                100
+                64
             ],
             [
-                50,
-                25
+                64,
+                32
             ]
         ],
         "activation": [
-            "relu",
-            "tanh"
+            "relu"
         ],
         "solver": [
             "adam"
@@ -122,33 +121,54 @@
         ],
         "max_iter": [
             500
-        ],
-        "random_state": [
-            42
         ]
     },
     "svm": [
         {
-            "C": [
-                0.1,
-                1.0,
-                10.0
-            ],
             "kernel": [
                 "linear"
+            ],
+            "C": [
+                0.1,
+                0.3,
+                1.0
+            ],
+            "coef0": [
+                1.0
+            ],
+            "tol": [
+                0.001
+            ],
+            "max_iter": [
+                1000
+            ],
+            "probability": [
+                true
             ]
         },
         {
-            "C": [
-                0.1,
-                1.0,
-                10.0
-            ],
             "kernel": [
                 "rbf"
             ],
+            "C": [
+                0.3,
+                1.0
+            ],
             "gamma": [
-                "scale"
+                "auto",
+                0.01
+            ],
+            "coef0": [
+                1.0
+            ],
+            "tol": [
+                0.001
+            ],
+            "max_iter": [
+                1000
+            ],
+            "probability": [
+                true
             ]
         }
     ]

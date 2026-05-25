@@ -1,43 +1,54 @@
 {
     "logistic-regression": {
+        "class_weight": [
+            "balanced"
+        ],
+        "max_iter": [
+            5000,
+            2500,
+            1000
+        ],
+        "random_state": [
+            0
+        ],
         "penalty": [
+            null,
             "l2",
             "l1"
         ],
         "C": [
+            0.3,
             0.1,
-            1,
-            5,
-            10
-        ],
-        "class_weight": [
-            "balanced"
+            1.0,
+            3.0,
+            5.0
         ]
     },
     "random-forest": {
-        "n_estimators": [
-            10,
-            100,
-            300
-        ],
-        "max_features": [
-            "sqrt",
-            5,
-            10
-        ],
         "random_state": [
-            42
+            0
         ],
         "class_weight": [
             "balanced"
         ],
-        "max_depth": [
-            null,
+        "min_samples_split": [
+            5,
             10
         ],
-        "min_samples_split": [
-            2,
+        "n_estimators": [
+            50,
+            100,
+            200
+        ],
+        "max_features": [
+            "sqrt",
+            "log2",
             5
+        ],
+        "max_depth": [
+            null,
+            5,
+            15
         ]
     },
     "tree": {
@@ -46,17 +57,16 @@
             true
         ],
         "min_samples_leaf": [
-            1,
-            5
+            2,
+            10
         ],
         "min_samples_split": [
-            2,
-            5
+            5,
+            10
         ],
         "max_depth": [
             null,
-            5,
-            10
+            100
         ],
         "sufficient_majority": [
             0.95,
@@ -64,39 +74,52 @@
         ]
     },
     "gradient-boosting": {
+        "random_state": [
+            0
+        ],
         "n_estimators": [
+            50,
             100,
-            300
+            200
         ],
         "learning_rate": [
             0.05,
-            0.1
-        ],
-        "random_state": [
-            42
+            0.1,
+            0.5
         ],
         "max_depth": [
-            2,
-            3
+            3,
+            5
         ],
         "min_samples_split": [
-            2
+            2,
+            5
         ],
         "subsample": [
+            0.8,
             1.0
         ]
     },
     "neural-network": {
+        "random_state": [
+            1
+        ],
         "hidden_layer_sizes": [
-            [
-                50
-            ],
             [
                 100
             ],
             [
-                50,
-                50
+                64,
+                32
+            ],
+            [
+                128
+            ],
+            [
+                32
+            ],
+            [
+                64
             ]
         ],
         "activation": [
@@ -107,58 +130,68 @@
         ],
         "alpha": [
             0.0001,
-            0.001
+            0.001,
+            0.01
         ],
         "max_iter": [
             200,
-            300
-        ],
-        "random_state": [
-            42
+            300,
+            500
         ]
     },
     "svm": [
         {
-            "C": [
-                0.1,
-                1,
-                10
-            ],
             "kernel": [
                 "linear"
+            ],
+            "C": [
+                0.5,
+                1.0,
+                1.5,
+                2.0
+            ],
+            "coef0": [
+                1.0
+            ],
+            "tol": [
+                0.001,
+                0.01
+            ],
+            "max_iter": [
+                1000,
+                500
+            ],
+            "probability": [
+                true
             ]
         },
         {
-            "C": [
-                0.1,
-                1,
-                10
-            ],
             "kernel": [
                 "rbf"
             ],
-            "gamma": [
-                "scale",
-                0.01,
-                0.001
-            ]
-        },
-        {
             "C": [
-                0.1,
-                1,
-                10
-            ],
-            "kernel": [
-                "sigmoid"
+                0.5,
+                1.0,
+                1.5,
+                2.0
             ],
             "gamma": [
-                "scale",
-                0.01
+                "auto",
+                0.01,
+                0.1
             ],
             "coef0": [
-                0,
-                1
+                1.0
+            ],
+            "tol": [
+                0.001
+            ],
+            "max_iter": [
+                1000,
+                500
+            ],
+            "probability": [
+                true
             ]
         }
     ]
