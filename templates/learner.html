@@ -52,57 +52,30 @@
             <h2>Evaluation results</h2>
             <p>Full table with evaluation results.</p>
             <p>Sorting by column is available.</p>
-            <div class="table table-striped table-bordered" style="overflow-x: auto; width: 100%; margin: 0;">
+
+            <div id="evaluation-results-wrapper" style="overflow-x: auto; width: 100%; margin: 0;">
                 {{ evaluation_results | safe }}
+            </div>
+
+            <div id="comparison-box" class="comparison-box">
+                <h3>Selected models comparison</h3>
+                <p class="comparison-note">Select a row, then press Ctrl and select another one.</p>
+
+                <div class="delta-legend">
+                    <strong>Delta interpretation:</strong>
+                    <span>&lt; 0.001 = negligible</span>
+                    <span>0.001–0.005 = very small</span>
+                    <span>0.005–0.010 = small</span>
+                    <span>0.010–0.050 = moderate</span>
+                    <span>≥ 0.050 = large</span>
+                </div>
+
+                <div id="comparison-result"></div>
             </div>
         </section>
     </main>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const table = document.getElementById("results-table");
-            if (!table) return;
-
-            const headers = table.querySelectorAll("th");
-
-            headers.forEach((header, columnIndex) => {
-                header.style.cursor = "pointer";
-
-                header.addEventListener("click", () => {
-                    const tbody = table.querySelector("tbody");
-                    const rows = Array.from(tbody.querySelectorAll("tr"));
-
-                    const currentDirection = header.dataset.sortDirection || "asc";
-                    const newDirection = currentDirection === "asc" ? "desc" : "asc";
-
-                    headers.forEach(h => h.dataset.sortDirection = "");
-                    header.dataset.sortDirection = newDirection;
-
-                    rows.sort((rowA, rowB) => {
-                        const cellA = rowA.children[columnIndex].innerText.trim();
-                        const cellB = rowB.children[columnIndex].innerText.trim();
-
-                        const valueA = parseFloat(cellA);
-                        const valueB = parseFloat(cellB);
-
-                        const bothNumeric = !isNaN(valueA) && !isNaN(valueB);
-
-                        if (bothNumeric) {
-                            return newDirection === "asc"
-                                ? valueA - valueB
-                                : valueB - valueA;
-                        }
-
-                        return newDirection === "asc"
-                            ? cellA.localeCompare(cellB)
-                            : cellB.localeCompare(cellA);
-                    });
-
-                    rows.forEach(row => tbody.appendChild(row));
-                });
-            });
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 
 </html>

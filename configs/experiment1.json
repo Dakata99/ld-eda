@@ -14,6 +14,9 @@
         ],
         "class_weight": [
             "balanced"
+        ],
+        "max_iter": [
+            10000
         ]
     },
     "random-forest": {
@@ -23,7 +26,8 @@
         ],
         "max_features": [
             "sqrt",
-            "log2"
+            "log2",
+            5
         ],
         "random_state": [
             42
@@ -120,6 +124,7 @@
             0.001
         ],
         "max_iter": [
+            200,
             500
         ],
         "random_state": [
@@ -135,6 +140,15 @@
             ],
             "kernel": [
                 "linear"
+            ],
+            "coef0": [
+                1.0
+            ],
+            "max_iter": [
+                100
+            ],
+            "probability": [
+                true
             ]
         },
         {
@@ -147,6 +161,15 @@
             ],
             "gamma": [
                 "scale"
+            ],
+            "coef0": [
+                1.0
+            ],
+            "max_iter": [
+                100
+            ],
+            "probability": [
+                true
             ]
         }
     ]

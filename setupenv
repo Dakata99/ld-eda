@@ -10,7 +10,7 @@ uv venv --prompt ldc --clear
 source .venv/bin/activate
 
 # Install dependencies.
-uv pip install -e . ".[dev]"
+uv pip install -e . --quiet
 
 # Enable command-line autocompletion for the `liver` command.
 eval "$(register-python-argcomplete liver)"

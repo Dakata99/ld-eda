@@ -68,7 +68,7 @@ def heatmap(df: pd.DataFrame):
 	)
 
 
-def main(exprid: int, filename: str, outputfile: str):
+def main(exprid: int, config: str, filename: str):
 	# 1) Load the results (CSV file) into a DataFrame
 	fd = root("results", filename)
 	if not fd.exists():
@@ -109,7 +109,7 @@ def main(exprid: int, filename: str, outputfile: str):
 		{
 			"key": "home",
 			"label": "Home",
-			"file": outputfile,
+			"file": "index.html",
 		}
 	]
 
@@ -142,11 +142,11 @@ def main(exprid: int, filename: str, outputfile: str):
 		evaluation_results=df.to_html(index=False, table_id="results-table"),
 	)
 
-	expr = root("reports", f"expr{exprid}")
+	expr = root("reports", f"expr{exprid}-{config}")
 	if not expr.exists():
 		expr.mkdir(parents=True)
 
-	output_file: Path = root("reports", expr / outputfile)
+	output_file: Path = root("reports", expr / 'index.html')
 	output_file.parent.mkdir(parents=True, exist_ok=True)
 	output_file.write_text(index, encoding="utf-8")
 
@@ -182,3 +182,4 @@ def main(exprid: int, filename: str, outputfile: str):
 
 	# Copy CSS file next to generated files
 	shutil.copy(root("templates/styles.css"), expr)
+	shutil.copy(root("templates/script.js"), expr)

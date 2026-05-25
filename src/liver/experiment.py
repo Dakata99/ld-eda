@@ -148,9 +148,6 @@ class TestAndScore:
 				"Precision(weighted)": partial(Precision, target=None, average="weighted"),
 				"AUC": AUC,
 				"CA": CA,
-				"Recall(macro)": partial(Recall, average="macro"),
-				"F1(macro)": partial(F1, average="macro"),
-				"Precision(macro)": partial(Precision, average="macro"),
 			},
 			2: {
 				"Recall(Sick)": partial(Recall, target=sick_index),

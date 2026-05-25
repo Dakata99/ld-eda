@@ -1,6 +1,6 @@
 from .experiment import main as experiment
 from .plot import main as plot
-from .cli import CSV_FILE, HTML_FILE
+from .cli import CSV_FILE
 
 
 def run_analysis(exprid: int, learners_group: list, config: str = "default") -> None:
@@ -10,6 +10,6 @@ def run_analysis(exprid: int, learners_group: list, config: str = "default") -> 
 	# Plot the results
 	plot(
 		exprid,
-		CSV_FILE.format(experiment=exprid, config=config),
-		HTML_FILE.format(config=config),
+		config,
+		CSV_FILE.format(experiment=exprid, config=config)
 	)
