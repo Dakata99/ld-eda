@@ -1,4 +1,5 @@
 from pathlib import Path
+import re
 import shutil
 
 from jinja2 import Environment, FileSystemLoader
@@ -34,6 +35,31 @@ TOP_20: int = 20
 
 INDEX_TEMPLATE: str = "index.html"
 LEARNER_TEMPLATE: str = "learner.html"
+
+
+# NOTE: class_weight and random_state are hardcoded in the JSON files,
+# so they are known!
+def simplify_learner_repr(s):
+    # Remove ', class_weight=...' or 'class_weight=...,'
+    s = re.sub(r", class_weight='balanced'", "", s)
+    s = re.sub(r"class_weight='balanced', ", "", s)
+
+    # Remove ', random_state=...' or 'random_state=...,'
+    s = re.sub(r", random_state=[^,)]*", "", s)
+    s = re.sub(r"random_state=[^,)]*, ", "", s)
+
+    # Remove 'min_impurity_split=<?>'
+    s = re.sub(r",?\s*min_impurity_split=[^,)]*", "", s)
+
+    # Remove 'presort=<?>'
+    s = re.sub(r",?\s*presort=[^,)]*", "", s)
+
+    return s.strip()
+
+
+def rename_learner(s: str):
+	name, rest = s.split("(", 1)
+	return f'{LEARNER_TO_FAMILY_MAPPING[name]}({rest}'
 
 
 def heatmap(df: pd.DataFrame):
@@ -76,6 +102,10 @@ def main(exprid: int, method: str, config: str):
 
 	df = pd.read_csv(fd)
 	logger.success(f"Loaded file: {fd}")
+
+	# Simplify learner representation
+	df["Learner"] = df['Learner'].apply(rename_learner)
+	df['Learner'] = df['Learner'].apply(simplify_learner_repr)
 	logger.debug(df.head())
 
 	# Priority is preserved by the ordering of the metrics in the CSV file!
@@ -87,20 +117,19 @@ def main(exprid: int, method: str, config: str):
 	logger.debug(df.head())
 
 	# Map learner names
-	df["Family"] = df["Learner"].apply(lambda learner: learner.split("(")[0])
-	df["Family"] = df["Family"].map(LEARNER_TO_FAMILY_MAPPING)
+	df["Family"] = df["Learner"].apply(lambda learner: learner.split("(", 1)[0])
 	df["ID"] = df["Family"] + "#" + (df.groupby("Family").cumcount() + 1).astype(str).str.zfill(3)
 	logger.debug(df.head())
 
 	families = df["Family"].unique()
 	for family in families:
 		famdf = df[df["Family"] == family]
-		# famdf = famdf.sort_values(by=metrics, ascending=[False] * len(metrics))
 		HEATMAPS[family] = heatmap(famdf.head(TOP_20))
 
 	# 2) Generate heatmap
 	HEATMAPS["overview"] = heatmap(df.head(TOP_20))
 
+    # 3) Create HTML reports
 	env = Environment(loader=FileSystemLoader(TEMPLATES))
 	template = env.get_template(INDEX_TEMPLATE)
 

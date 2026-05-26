@@ -57,8 +57,9 @@
             true
         ],
         "min_samples_leaf": [
-            2,
-            10
+            5,
+            10,
+            20
         ],
         "min_samples_split": [
             5,
@@ -66,7 +67,8 @@
         ],
         "max_depth": [
             null,
-            100
+            10,
+            20
         ],
         "sufficient_majority": [
             0.95,

@@ -5,22 +5,25 @@ from pathlib import Path
 from loguru import logger
 from Orange.data import Table
 from Orange.evaluation import AUC, CA, F1, MatthewsCorrCoefficient, Precision, Recall
-from Orange.evaluation.testing import TestOnTestData, CrossValidation
+from Orange.evaluation.testing import CrossValidation, TestOnTestData
 from Orange.preprocess import Average, Continuize, Impute, Normalize, PreprocessorList
 import pandas as pd
 
-from .load import load_configuration, load_dataset
-from .utils import create_learners, dataset_report, profiler, root
-
-from Orange.data import Table
+from .load import load_configuration
+from .utils import create_learners, profiler, root
 
 OUTPUT_DIR: Path = root("results")
 CSV_FILE: str = "experiment{experiment}-{config}-{method}.csv"
 
 
+EXPERIMENTS: dict[int, str] = {
+	1: 'Multiclass classification for Indian dataset',
+	2: 'Binary classification for Indian dataset',
+	3: 'Binary classification for all 3 datasets',
+}
+
 class TestAndScore:
-	def __init__(self, data, learners: list):
-		self._data = data
+	def __init__(self, learners: list):
 		self._learners = learners
 		self._preprocessor = PreprocessorList(
 			preprocessors=(
@@ -35,16 +38,13 @@ class TestAndScore:
 		self._scores = None
 
 	@profiler
-	def train(self, exprid: int, method: str):
+	def train(self, train: Table, test: Table, method: str):
 		"""Method for training learnears."""
-		# Load training data
-		train = Table(str(root("datasets", f"expr{exprid}", f"expr{exprid}-train-data.tab")))
-
 		# Evaluate models with the chosen method
 		if method == 'cv':
 			logger.info(f"CrossValidation: evaluating {len(self._learners)} learners...")
 			def progress_callback(progress: float) -> None:
-				logger.info("Progress: {:.2f}%", round(progress * 100))
+				logger.info("Progress: {}%", round(progress * 100, 1))
 
 			cv = CrossValidation()
 			self._scores = cv(
@@ -52,7 +52,7 @@ class TestAndScore:
 				self._learners,
 				preprocessor=self._preprocessor,
 				callback=progress_callback,
-			)
+			) # type: ignore
 		else:
 			logger.info(f"TestOnTestData: evaluating {len(self._learners)} learners...")
 			# Evaluate using TestOnTestData (train on train set, test on test set)
@@ -64,8 +64,6 @@ class TestAndScore:
 					len(self._learners),
 					progress * 100,
 				)
-
-			test = Table(str(root("datasets", f"expr{exprid}", f"expr{exprid}-test-data.tab")))
 
 			# Set store_data to True if we want to keep the augmented data with predictions, probabilities, etc.
 			evaluator = TestOnTestData(store_data=False)
@@ -137,18 +135,11 @@ class TestAndScore:
 
 def main(exprid: int, method: str, learners_group: list, configuration: str = "default") -> None:
 	"""Main function for evaluation an experiment."""
-	logger.info(f"Running experiment {exprid}")
+	logger.info(f"Running experiment: {EXPERIMENTS[exprid]}")
 
-	# 1) Load the dataset (CSV file)
-	data = load_dataset(f"experiment{exprid}")
-	dataset_report(
-		data,
-		preview_rows=10,
-		show_all_features=True,
-		show_all_metas=True,
-		show_numeric_stats=True,
-		show_discrete_stats=True,
-	)
+	# 1) Load train, test data
+	train = Table(str(root("datasets", f"expr{exprid}", f"expr{exprid}-train-data.tab")))
+	test = Table(str(root("datasets", f"expr{exprid}", f"expr{exprid}-test-data.tab")))
 
 	# 2) Load configuration and create learners
 	config = load_configuration(configuration)
@@ -164,6 +155,6 @@ def main(exprid: int, method: str, learners_group: list, configuration: str = "d
 			if group in learners:
 				learners_to_evaluate.extend(learners[group])
 
-	ts = TestAndScore(data, learners_to_evaluate)
-	ts.train(exprid, method)
+	ts = TestAndScore(learners_to_evaluate)
+	ts.train(train, test, method)
 	ts.eval(exprid, CSV_FILE.format(experiment=exprid, config=configuration, method=method))
