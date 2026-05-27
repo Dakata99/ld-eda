@@ -29,9 +29,14 @@ FAMILY_TO_FILE_MAPPING: dict[str, str] = {
 	"SVM": "svm",
 }
 
-HEATMAPS: dict = {"overview": None}
+HEATMAPS: dict = {
+	"all": None,
+	"per-family": None
+}
 
+TOP_6: int = 6
 TOP_20: int = 20
+TOP_N: int = TOP_20
 
 INDEX_TEMPLATE: str = "index.html"
 LEARNER_TEMPLATE: str = "learner.html"
@@ -124,10 +129,12 @@ def main(exprid: int, method: str, config: str):
 	families = df["Family"].unique()
 	for family in families:
 		famdf = df[df["Family"] == family]
-		HEATMAPS[family] = heatmap(famdf.head(TOP_20))
+		HEATMAPS[family] = heatmap(famdf.head(TOP_N))
 
 	# 2) Generate heatmap
-	HEATMAPS["overview"] = heatmap(df.head(TOP_20))
+	HEATMAPS["all"] = heatmap(df.head(TOP_N))
+	top_per_family = df.groupby('Family', sort=False).head(1)
+	HEATMAPS["per-family"] = heatmap(top_per_family)
 
     # 3) Create HTML reports
 	env = Environment(loader=FileSystemLoader(TEMPLATES))
@@ -164,9 +171,10 @@ def main(exprid: int, method: str, config: str):
 		family_count=len(df["Family"].unique()),
 		num_metrics=len(metrics),
 		metrics_priority="<br>".join(metrics),
-		# Heatmap card
-		top_n=TOP_20,
-		heatmap=HEATMAPS["overview"],
+		# Heatmap cards
+		heatmap_all=HEATMAPS['per-family'],
+		top_n=TOP_N,
+		heatmap=HEATMAPS["all"],
 		# Evaluation results card
 		evaluation_results=df.drop(columns=["Family"]).to_html(index=False, table_id="results-table"),
 	)
@@ -197,7 +205,7 @@ def main(exprid: int, method: str, config: str):
 			num_metrics=len(metrics),
 			metrics_priority="<br>".join(metrics),
 			# Heatmap card
-			top_n=TOP_20,
+			top_n=TOP_N,
 			heatmap=HEATMAPS[family],
 			# Evaluation results card
 			evaluation_results=famdf.drop(columns=["Family"]).to_html(index=False, table_id="results-table"),
