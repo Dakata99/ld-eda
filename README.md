@@ -177,3 +177,8 @@ For reference: `Orange/widgets/model/owsvm.py`.
 
 - Disabled GUI options should usually be represented by omitting the parameter from the JSON, not by passing `null`. Passing `null` becomes `None` in Python and is only valid for parameters whose API explicitly accepts `None`, such as `class_weight`, `max_depth`, or `random_state`.
 - `Orange.evaluation.testing.sample()` uses a different splitting implementation/row-selection logic than Orange GUI’s Data Sampler widget, so the same `n=0.8`, `stratified=True`, and `random_state=42` do not guarantee the same train/test rows.
+
+## TODO
+
+- Make `default` JSON files for Orange and for Python, i.e. `default-ow` and `default-py`.
+- Make full default JSON with all parameters described for each learner.
