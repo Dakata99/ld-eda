@@ -108,13 +108,17 @@ def main(exprid: int, method: str, config: str):
 	df = pd.read_csv(fd)
 	logger.success(f"Loaded file: {fd}")
 
+	# FIXME: drop weighted matrics for scenario 2 and 3
+	if any('Sick' in column for column in df.columns):
+		df.drop(columns=['Recall(weighted)', 'F1(weighted)'], inplace=True)
+
 	# Simplify learner representation
 	df["Learner"] = df['Learner'].apply(rename_learner)
 	df['Learner'] = df['Learner'].apply(simplify_learner_repr)
 	logger.debug(df.head())
 
 	# Priority is preserved by the ordering of the metrics in the CSV file!
-	metrics = list(df.columns)
+	metrics = df.columns.to_list()
 	metrics.pop(0)  # remove 'Learner' column
 	rows = len(df)
 
