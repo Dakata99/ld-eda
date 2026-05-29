@@ -1,0 +1,804 @@
+<!DOCTYPE html><html><head>
+    <meta charset="utf-8">
+    <title>Orange Report</title>
+
+    <style>
+    html, body, table {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-size: 13px;
+        margin:0px;
+        padding:0;
+        border:0 none;
+    }
+
+    h1, h2 , h3, h4, h5 {
+       padding: 1px;
+       font-size:100%;
+    }
+
+    h1 {
+        color: white;
+        background-color: black;
+        padding: 4px;
+        margin-top: 12px;
+        margin-bottom: 6px;
+    }
+
+    h2 {
+        border-bottom: 1px solid black;
+        padding-left: 2px;
+    }
+
+    ul, table, p {
+        padding: 10px;
+    }
+
+    table {
+        margin-left: -6px;
+    }
+
+    span.timestamp {
+        position: absolute;
+        right: 40px;
+        color:#ddd;
+    }
+
+    div.selected, div.normal {
+        margin: 5px;
+    }
+
+    div.selected {
+        background: #ddd;
+    }
+    @media print{
+        div.selected {
+            background: inherit;
+        }
+        ::-webkit-input-placeholder {
+            color: transparent;
+        }
+    }
+
+    div.content {
+        margin-left: 15px;
+    }
+
+    th, td {
+        text-align: left;
+        padding: 2px 6px 2px 6px;
+    }
+
+    th {
+        font-weight: bold;
+    }
+
+    @media screen {
+        td, th {
+            white-space: nowrap;
+        }
+    }
+
+    .caption {
+        text-align: center;
+        font-size: 90%;
+    }
+
+    img {
+        display: block;
+        margin: auto;
+        max-height: 20cm;
+    }
+
+    span.legend-square {
+        width: 1em;
+        height: 1em;
+        margin-right: 6px;
+        display: inline-block;
+    }
+
+    span.legend-item {
+        margin-right: 24px;
+    }
+
+    textarea {
+        border: 1px solid silver;
+        font-style: italic;
+        width: 100%;
+        height: 4em;
+    }
+
+    .textwrapper {
+        padding: 15px;
+    }
+
+    div.normal textarea:invalid {
+        display: none;
+    }
+
+    div.selected textarea {
+        display: block;
+    }
+
+    @media print{
+        section.section, img {
+            page-break-inside: avoid;
+        }
+    }
+    </style>
+    <script>
+    function scrollToId(id) {
+        var sel_el = document.getElementById(id);
+        if (sel_el != undefined) {
+            sel_el.scrollIntoView();
+            return true;
+        }
+        return false;
+    };
+
+    function setSelectedId(id) {
+        var sel_el = document.getElementsByClassName('selected')[0];
+        if (sel_el != undefined && sel_el.id != id) {
+           sel_el.className = 'normal';
+        }
+        sel_el = document.getElementById(id);
+        if (sel_el != undefined) {
+            sel_el.className = 'selected';
+            return true;
+        }
+        return false;
+    };
+    </script>
+
+</head><body onload="(function (id) {     setSelectedId(id); scrollToId(id); }(&quot;2759600106112&quot;));">
+
+ 
+
+<div id="2759747214160" class="normal" onclick="pybridge._select_item(this.id)"><section class="section"><h1>Test and Score <span class="timestamp">Fri May 29 26, 22:20:07</span></h1><div class="content">
+<h2>Settings</h2><ul><b>Sampling type:</b> No sampling, test on testing data<br><b>Target class:</b> None, show average over classes<br></ul><h2>Scores</h2><table>
+<tbody><tr><th style="color:black; background:transparent; text-align:left; vertical-align:middle;">Model</th>
+<th style="color:black; background:transparent; text-align:left; vertical-align:middle;">AUC</th>
+<th style="color:black; background:transparent; text-align:left; vertical-align:middle;">CA</th>
+<th style="color:black; background:transparent; text-align:left; vertical-align:middle;">F1</th>
+<th style="color:black; background:transparent; text-align:left; vertical-align:middle;">Prec</th>
+<th style="color:black; background:transparent; text-align:left; vertical-align:middle;">Recall</th>
+<th style="color:black; background:transparent; text-align:left; vertical-align:middle;">MCC</th>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;">Gradient Boosting</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.988</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.891</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.890</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.890</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.891</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.858</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;">Logistic Regression</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.970</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.810</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.812</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.818</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.810</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.755</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;">Neural Network</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.974</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.833</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.832</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.831</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.833</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.781</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;">Random Forest</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.976</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.853</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.852</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.853</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.853</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.808</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;">SVM</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.947</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.765</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.761</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.765</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.765</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.693</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;">Tree</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.969</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.833</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.831</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.831</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.833</td>
+<td style="color:black; background:transparent; text-align:right; vertical-align:middle;">0.782</td>
+</tr></tbody></table></div></section>
+
+<div class="textwrapper"><textarea placeholder="Write a comment..." oninput="this.innerHTML = this.value;pybridge._add_comment(this.parentNode.parentNode.id, this.value);"></textarea></div></div><div id="2759747211136" class="normal" onclick="pybridge._select_item(this.id)"><section class="section"><h1>Confusion Matrix <span class="timestamp">Fri May 29 26, 22:20:28</span></h1><div class="content">
+<h2>Confusion matrix for Gradient Boosting (showing number of instances)</h2><table>
+<tbody><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:center; vertical-align:middle;">Predicted</td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Alcoholic_Liver_Disease</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Cirrhosis</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Fatty_Liver</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Hepatitis_B</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Hepatitis_C</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Normal</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">∑</td>
+</tr><tr><td style="color:black; background:transparent; text-align:center; vertical-align:bottom;">Actual</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Alcoholic_Liver_Disease</td>
+<td style="color:#000000; background:#efeffb; text-align:right; vertical-align:middle;">1515</td>
+<td style="color:#000000; background:#fdf7f7; text-align:right; vertical-align:middle;">44</td>
+<td style="color:#000000; background:#f9e7e7; text-align:right; vertical-align:middle;">138</td>
+<td style="color:#000000; background:#fefcfc; text-align:right; vertical-align:middle;">18</td>
+<td style="color:#000000; background:#fdf5f5; text-align:right; vertical-align:middle;">50</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">3</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;768</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Cirrhosis</td>
+<td style="color:#000000; background:#fcf0f0; text-align:right; vertical-align:middle;">79</td>
+<td style="color:#000000; background:#efeffb; text-align:right; vertical-align:middle;">1490</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">9</td>
+<td style="color:#000000; background:#fef8f8; text-align:right; vertical-align:middle;">37</td>
+<td style="color:#000000; background:#fefcfc; text-align:right; vertical-align:middle;">16</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">1</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;632</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Fatty_Liver</td>
+<td style="color:#000000; background:#fefcfc; text-align:right; vertical-align:middle;">19</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">2</td>
+<td style="color:#000000; background:#cecef4; text-align:right; vertical-align:middle;">4583</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">4</td>
+<td style="color:#000000; background:#f4cece; text-align:right; vertical-align:middle;">288</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">4&nbsp;896</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Hepatitis_B</td>
+<td style="color:#000000; background:#fcf0f0; text-align:right; vertical-align:middle;">80</td>
+<td style="color:#000000; background:#fefafa; text-align:right; vertical-align:middle;">26</td>
+<td style="color:#000000; background:#fefcfc; text-align:right; vertical-align:middle;">13</td>
+<td style="color:#000000; background:#f5f5fd; text-align:right; vertical-align:middle;">836</td>
+<td style="color:#000000; background:#fae8e8; text-align:right; vertical-align:middle;">133</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;088</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Hepatitis_C</td>
+<td style="color:#000000; background:#fbebeb; text-align:right; vertical-align:middle;">107</td>
+<td style="color:#000000; background:#fefafa; text-align:right; vertical-align:middle;">21</td>
+<td style="color:#000000; background:#fefafa; text-align:right; vertical-align:middle;">26</td>
+<td style="color:#000000; background:#fbeded; text-align:right; vertical-align:middle;">100</td>
+<td style="color:#000000; background:#f8f8fe; text-align:right; vertical-align:middle;">561</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">1</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">816</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Normal</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">1</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0</td>
+<td style="color:#000000; background:#f5d1d1; text-align:right; vertical-align:middle;">264</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0</td>
+<td style="color:#000000; background:#ddddf7; text-align:right; vertical-align:middle;">3135</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">3&nbsp;400</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">∑</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;801</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;583</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">5&nbsp;033</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">991</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">764</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">3&nbsp;428</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">13&nbsp;600</td>
+</tr></tbody></table></div></section>
+
+<div class="textwrapper"><textarea placeholder="Write a comment..." oninput="this.innerHTML = this.value;pybridge._add_comment(this.parentNode.parentNode.id, this.value);"></textarea></div></div><div id="2759600101216" class="normal" onclick="pybridge._select_item(this.id)"><section class="section"><h1>Confusion Matrix <span class="timestamp">Fri May 29 26, 22:20:34</span></h1><div class="content">
+<h2>Confusion matrix for Gradient Boosting (showing proportion of actual)</h2><table>
+<tbody><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:center; vertical-align:middle;">Predicted</td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Alcoholic_Liver_Disease</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Cirrhosis</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Fatty_Liver</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Hepatitis_B</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Hepatitis_C</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Normal</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">∑</td>
+</tr><tr><td style="color:black; background:transparent; text-align:center; vertical-align:bottom;">Actual</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Alcoholic_Liver_Disease</td>
+<td style="color:#000000; background:#d1d1f5; text-align:right; vertical-align:middle;">85.7 %</td>
+<td style="color:#000000; background:#fbefef; text-align:right; vertical-align:middle;">2.5 %</td>
+<td style="color:#000000; background:#f4cece; text-align:right; vertical-align:middle;">7.8 %</td>
+<td style="color:#000000; background:#fef8f8; text-align:right; vertical-align:middle;">1.0 %</td>
+<td style="color:#000000; background:#fbeded; text-align:right; vertical-align:middle;">2.8 %</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">0.2 %</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;768</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Cirrhosis</td>
+<td style="color:#000000; background:#f4cece; text-align:right; vertical-align:middle;">4.8 %</td>
+<td style="color:#000000; background:#cecef4; text-align:right; vertical-align:middle;">91.3 %</td>
+<td style="color:#000000; background:#fef8f8; text-align:right; vertical-align:middle;">0.6 %</td>
+<td style="color:#000000; background:#f9e7e7; text-align:right; vertical-align:middle;">2.3 %</td>
+<td style="color:#000000; background:#fcf4f4; text-align:right; vertical-align:middle;">1.0 %</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">0.1 %</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;632</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Fatty_Liver</td>
+<td style="color:#000000; background:#fefcfc; text-align:right; vertical-align:middle;">0.4 %</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">0.0 %</td>
+<td style="color:#000000; background:#cecef4; text-align:right; vertical-align:middle;">93.6 %</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0.0 %</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">0.1 %</td>
+<td style="color:#000000; background:#f4cece; text-align:right; vertical-align:middle;">5.9 %</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">4&nbsp;896</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Hepatitis_B</td>
+<td style="color:#000000; background:#f8e0e0; text-align:right; vertical-align:middle;">7.4 %</td>
+<td style="color:#000000; background:#fdf5f5; text-align:right; vertical-align:middle;">2.4 %</td>
+<td style="color:#000000; background:#fefafa; text-align:right; vertical-align:middle;">1.2 %</td>
+<td style="color:#000000; background:#d6d6f6; text-align:right; vertical-align:middle;">76.8 %</td>
+<td style="color:#000000; background:#f4cece; text-align:right; vertical-align:middle;">12.2 %</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0.0 %</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;088</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Hepatitis_C</td>
+<td style="color:#000000; background:#f4cece; text-align:right; vertical-align:middle;">13.1 %</td>
+<td style="color:#000000; background:#fdf5f5; text-align:right; vertical-align:middle;">2.6 %</td>
+<td style="color:#000000; background:#fcf2f2; text-align:right; vertical-align:middle;">3.2 %</td>
+<td style="color:#000000; background:#f4d0d0; text-align:right; vertical-align:middle;">12.3 %</td>
+<td style="color:#000000; background:#dadaf6; text-align:right; vertical-align:middle;">68.8 %</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">0.1 %</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">816</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Normal</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">0.0 %</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0.0 %</td>
+<td style="color:#000000; background:#f4cece; text-align:right; vertical-align:middle;">7.8 %</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0.0 %</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0.0 %</td>
+<td style="color:#000000; background:#cecef4; text-align:right; vertical-align:middle;">92.2 %</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">3&nbsp;400</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">∑</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;801</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;583</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">5&nbsp;033</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">991</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">764</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">3&nbsp;428</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">13&nbsp;600</td>
+</tr></tbody></table></div></section>
+
+<div class="textwrapper"><textarea placeholder="Write a comment..." oninput="this.innerHTML = this.value;pybridge._add_comment(this.parentNode.parentNode.id, this.value);"></textarea></div></div><div id="2759747213008" class="normal" onclick="pybridge._select_item(this.id)"><section class="section"><h1>Confusion Matrix <span class="timestamp">Fri May 29 26, 22:20:39</span></h1><div class="content">
+<h2>Confusion matrix for SVM (showing number of instances)</h2><table>
+<tbody><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:center; vertical-align:middle;">Predicted</td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Alcoholic_Liver_Disease</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Cirrhosis</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Fatty_Liver</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Hepatitis_B</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Hepatitis_C</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Normal</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">∑</td>
+</tr><tr><td style="color:black; background:transparent; text-align:center; vertical-align:bottom;">Actual</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Alcoholic_Liver_Disease</td>
+<td style="color:#000000; background:#f0f0fc; text-align:right; vertical-align:middle;">1081</td>
+<td style="color:#000000; background:#fdf7f7; text-align:right; vertical-align:middle;">132</td>
+<td style="color:#000000; background:#f9e7e7; text-align:right; vertical-align:middle;">414</td>
+<td style="color:#000000; background:#fefcfc; text-align:right; vertical-align:middle;">41</td>
+<td style="color:#000000; background:#fefafa; text-align:right; vertical-align:middle;">85</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">15</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;768</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Cirrhosis</td>
+<td style="color:#000000; background:#fef8f8; text-align:right; vertical-align:middle;">91</td>
+<td style="color:#000000; background:#ededfb; text-align:right; vertical-align:middle;">1427</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">21</td>
+<td style="color:#000000; background:#fefafa; text-align:right; vertical-align:middle;">60</td>
+<td style="color:#000000; background:#fefcfc; text-align:right; vertical-align:middle;">31</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">2</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;632</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Fatty_Liver</td>
+<td style="color:#000000; background:#fefafa; text-align:right; vertical-align:middle;">64</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">12</td>
+<td style="color:#000000; background:#cecef4; text-align:right; vertical-align:middle;">3933</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">12</td>
+<td style="color:#000000; background:#f4cece; text-align:right; vertical-align:middle;">875</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">4&nbsp;896</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Hepatitis_B</td>
+<td style="color:#000000; background:#fef8f8; text-align:right; vertical-align:middle;">104</td>
+<td style="color:#000000; background:#fef8f8; text-align:right; vertical-align:middle;">89</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">19</td>
+<td style="color:#000000; background:#f8f8fe; text-align:right; vertical-align:middle;">471</td>
+<td style="color:#000000; background:#fae8e8; text-align:right; vertical-align:middle;">403</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">2</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;088</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Hepatitis_C</td>
+<td style="color:#000000; background:#fef8f8; text-align:right; vertical-align:middle;">92</td>
+<td style="color:#000000; background:#fefcfc; text-align:right; vertical-align:middle;">47</td>
+<td style="color:#000000; background:#fefafa; text-align:right; vertical-align:middle;">60</td>
+<td style="color:#000000; background:#fdf5f5; text-align:right; vertical-align:middle;">159</td>
+<td style="color:#000000; background:#f8f8fe; text-align:right; vertical-align:middle;">458</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">816</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Normal</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">1</td>
+<td style="color:#000000; background:#faeaea; text-align:right; vertical-align:middle;">367</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0</td>
+<td style="color:#000000; background:#d8d8f6; text-align:right; vertical-align:middle;">3032</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">3&nbsp;400</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">∑</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;432</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;708</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">4&nbsp;814</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">731</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">989</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">3&nbsp;926</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">13&nbsp;600</td>
+</tr></tbody></table></div></section>
+
+<div class="textwrapper"><textarea placeholder="Write a comment..." oninput="this.innerHTML = this.value;pybridge._add_comment(this.parentNode.parentNode.id, this.value);"></textarea></div></div><div id="2759747207968" class="normal" onclick="pybridge._select_item(this.id)"><section class="section"><h1>Confusion Matrix <span class="timestamp">Fri May 29 26, 22:20:43</span></h1><div class="content">
+<h2>Confusion matrix for Neural Network (showing number of instances)</h2><table>
+<tbody><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:center; vertical-align:middle;">Predicted</td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Alcoholic_Liver_Disease</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Cirrhosis</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Fatty_Liver</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Hepatitis_B</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Hepatitis_C</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Normal</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">∑</td>
+</tr><tr><td style="color:black; background:transparent; text-align:center; vertical-align:bottom;">Actual</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Alcoholic_Liver_Disease</td>
+<td style="color:#000000; background:#efeffb; text-align:right; vertical-align:middle;">1360</td>
+<td style="color:#000000; background:#fcf4f4; text-align:right; vertical-align:middle;">87</td>
+<td style="color:#000000; background:#f9e5e5; text-align:right; vertical-align:middle;">214</td>
+<td style="color:#000000; background:#fefafa; text-align:right; vertical-align:middle;">40</td>
+<td style="color:#000000; background:#fdf7f7; text-align:right; vertical-align:middle;">62</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">5</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;768</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Cirrhosis</td>
+<td style="color:#000000; background:#fcf0f0; text-align:right; vertical-align:middle;">122</td>
+<td style="color:#000000; background:#efeffb; text-align:right; vertical-align:middle;">1409</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">7</td>
+<td style="color:#000000; background:#fdf7f7; text-align:right; vertical-align:middle;">57</td>
+<td style="color:#000000; background:#fefafa; text-align:right; vertical-align:middle;">35</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">2</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;632</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Fatty_Liver</td>
+<td style="color:#000000; background:#fef8f8; text-align:right; vertical-align:middle;">55</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">8</td>
+<td style="color:#000000; background:#cecef4; text-align:right; vertical-align:middle;">4395</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">1</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">12</td>
+<td style="color:#000000; background:#f4cece; text-align:right; vertical-align:middle;">425</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">4&nbsp;896</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Hepatitis_B</td>
+<td style="color:#000000; background:#fcf2f2; text-align:right; vertical-align:middle;">111</td>
+<td style="color:#000000; background:#fdf7f7; text-align:right; vertical-align:middle;">61</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">9</td>
+<td style="color:#000000; background:#f7f7fd; text-align:right; vertical-align:middle;">646</td>
+<td style="color:#000000; background:#f8e0e0; text-align:right; vertical-align:middle;">259</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">2</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;088</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Hepatitis_C</td>
+<td style="color:#000000; background:#fcf2f2; text-align:right; vertical-align:middle;">112</td>
+<td style="color:#000000; background:#fefafa; text-align:right; vertical-align:middle;">31</td>
+<td style="color:#000000; background:#fefcfc; text-align:right; vertical-align:middle;">28</td>
+<td style="color:#000000; background:#f9e7e7; text-align:right; vertical-align:middle;">202</td>
+<td style="color:#000000; background:#f8f8fe; text-align:right; vertical-align:middle;">442</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">1</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">816</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Normal</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0</td>
+<td style="color:#000000; background:#f6dada; text-align:right; vertical-align:middle;">323</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0</td>
+<td style="color:#000000; background:#dbdbf7; text-align:right; vertical-align:middle;">3077</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">3&nbsp;400</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">∑</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;760</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;596</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">4&nbsp;976</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">946</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">810</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">3&nbsp;512</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">13&nbsp;600</td>
+</tr></tbody></table></div></section>
+
+<div class="textwrapper"><textarea placeholder="Write a comment..." oninput="this.innerHTML = this.value;pybridge._add_comment(this.parentNode.parentNode.id, this.value);"></textarea></div></div><div id="2759600101648" class="normal" onclick="pybridge._select_item(this.id)"><section class="section"><h1>Confusion Matrix <span class="timestamp">Fri May 29 26, 22:20:45</span></h1><div class="content">
+<h2>Confusion matrix for Random Forest (showing number of instances)</h2><table>
+<tbody><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:center; vertical-align:middle;">Predicted</td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Alcoholic_Liver_Disease</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Cirrhosis</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Fatty_Liver</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Hepatitis_B</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Hepatitis_C</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Normal</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">∑</td>
+</tr><tr><td style="color:black; background:transparent; text-align:center; vertical-align:bottom;">Actual</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Alcoholic_Liver_Disease</td>
+<td style="color:#000000; background:#efeffb; text-align:right; vertical-align:middle;">1443</td>
+<td style="color:#000000; background:#fcf4f4; text-align:right; vertical-align:middle;">75</td>
+<td style="color:#000000; background:#fae8e8; text-align:right; vertical-align:middle;">160</td>
+<td style="color:#000000; background:#fefafa; text-align:right; vertical-align:middle;">27</td>
+<td style="color:#000000; background:#fdf5f5; text-align:right; vertical-align:middle;">58</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">5</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;768</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Cirrhosis</td>
+<td style="color:#000000; background:#fcf2f2; text-align:right; vertical-align:middle;">85</td>
+<td style="color:#000000; background:#efeffb; text-align:right; vertical-align:middle;">1446</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">5</td>
+<td style="color:#000000; background:#fdf5f5; text-align:right; vertical-align:middle;">60</td>
+<td style="color:#000000; background:#fef8f8; text-align:right; vertical-align:middle;">35</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">1</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;632</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Fatty_Liver</td>
+<td style="color:#000000; background:#fdf5f5; text-align:right; vertical-align:middle;">62</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">9</td>
+<td style="color:#000000; background:#cecef4; text-align:right; vertical-align:middle;">4437</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">4</td>
+<td style="color:#000000; background:#fef8f8; text-align:right; vertical-align:middle;">40</td>
+<td style="color:#000000; background:#f4cece; text-align:right; vertical-align:middle;">344</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">4&nbsp;896</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Hepatitis_B</td>
+<td style="color:#000000; background:#fbefef; text-align:right; vertical-align:middle;">105</td>
+<td style="color:#000000; background:#fef8f8; text-align:right; vertical-align:middle;">36</td>
+<td style="color:#000000; background:#fefcfc; text-align:right; vertical-align:middle;">13</td>
+<td style="color:#000000; background:#f7f7fd; text-align:right; vertical-align:middle;">659</td>
+<td style="color:#000000; background:#f6d8d8; text-align:right; vertical-align:middle;">275</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;088</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Hepatitis_C</td>
+<td style="color:#000000; background:#fbefef; text-align:right; vertical-align:middle;">110</td>
+<td style="color:#000000; background:#fefafa; text-align:right; vertical-align:middle;">24</td>
+<td style="color:#000000; background:#fefafa; text-align:right; vertical-align:middle;">24</td>
+<td style="color:#000000; background:#fae8e8; text-align:right; vertical-align:middle;">150</td>
+<td style="color:#000000; background:#f8f8fe; text-align:right; vertical-align:middle;">507</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">1</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">816</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Normal</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0</td>
+<td style="color:#000000; background:#f5d5d5; text-align:right; vertical-align:middle;">295</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">2</td>
+<td style="color:#000000; background:#ddddf7; text-align:right; vertical-align:middle;">3103</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">3&nbsp;400</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">∑</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;805</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;590</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">4&nbsp;934</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">900</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">917</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">3&nbsp;454</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">13&nbsp;600</td>
+</tr></tbody></table></div></section>
+
+<div class="textwrapper"><textarea placeholder="Write a comment..." oninput="this.innerHTML = this.value;pybridge._add_comment(this.parentNode.parentNode.id, this.value);"></textarea></div></div><div id="2759600103664" class="normal" onclick="pybridge._select_item(this.id)"><section class="section"><h1>Confusion Matrix <span class="timestamp">Fri May 29 26, 22:20:48</span></h1><div class="content">
+<h2>Confusion matrix for Tree (showing number of instances)</h2><table>
+<tbody><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:center; vertical-align:middle;">Predicted</td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Alcoholic_Liver_Disease</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Cirrhosis</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Fatty_Liver</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Hepatitis_B</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Hepatitis_C</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Normal</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">∑</td>
+</tr><tr><td style="color:black; background:transparent; text-align:center; vertical-align:bottom;">Actual</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Alcoholic_Liver_Disease</td>
+<td style="color:#000000; background:#efeffb; text-align:right; vertical-align:middle;">1431</td>
+<td style="color:#000000; background:#fdf7f7; text-align:right; vertical-align:middle;">60</td>
+<td style="color:#000000; background:#faeaea; text-align:right; vertical-align:middle;">190</td>
+<td style="color:#000000; background:#fefcfc; text-align:right; vertical-align:middle;">15</td>
+<td style="color:#000000; background:#fdf7f7; text-align:right; vertical-align:middle;">66</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">6</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;768</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Cirrhosis</td>
+<td style="color:#000000; background:#fcf2f2; text-align:right; vertical-align:middle;">112</td>
+<td style="color:#000000; background:#efeffb; text-align:right; vertical-align:middle;">1365</td>
+<td style="color:#000000; background:#fefcfc; text-align:right; vertical-align:middle;">29</td>
+<td style="color:#000000; background:#fef8f8; text-align:right; vertical-align:middle;">48</td>
+<td style="color:#000000; background:#fdf5f5; text-align:right; vertical-align:middle;">75</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">3</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;632</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Fatty_Liver</td>
+<td style="color:#000000; background:#fefcfc; text-align:right; vertical-align:middle;">18</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">1</td>
+<td style="color:#000000; background:#cecef4; text-align:right; vertical-align:middle;">4427</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">7</td>
+<td style="color:#000000; background:#f4cece; text-align:right; vertical-align:middle;">443</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">4&nbsp;896</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Hepatitis_B</td>
+<td style="color:#000000; background:#fcf0f0; text-align:right; vertical-align:middle;">129</td>
+<td style="color:#000000; background:#fef8f8; text-align:right; vertical-align:middle;">45</td>
+<td style="color:#000000; background:#fefcfc; text-align:right; vertical-align:middle;">20</td>
+<td style="color:#000000; background:#f7f7fd; text-align:right; vertical-align:middle;">649</td>
+<td style="color:#000000; background:#f9e3e3; text-align:right; vertical-align:middle;">244</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">1</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;088</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Hepatitis_C</td>
+<td style="color:#000000; background:#fbefef; text-align:right; vertical-align:middle;">133</td>
+<td style="color:#000000; background:#fefcfc; text-align:right; vertical-align:middle;">25</td>
+<td style="color:#000000; background:#fefafa; text-align:right; vertical-align:middle;">35</td>
+<td style="color:#000000; background:#f8e2e2; text-align:right; vertical-align:middle;">257</td>
+<td style="color:#000000; background:#fafafe; text-align:right; vertical-align:middle;">365</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">1</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">816</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Normal</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0</td>
+<td style="color:#000000; background:#f7dddd; text-align:right; vertical-align:middle;">303</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0</td>
+<td style="color:#000000; background:#ddddf7; text-align:right; vertical-align:middle;">3097</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">3&nbsp;400</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">∑</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;823</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;496</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">5&nbsp;004</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">969</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">757</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">3&nbsp;551</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">13&nbsp;600</td>
+</tr></tbody></table></div></section>
+
+<div class="textwrapper"><textarea placeholder="Write a comment..." oninput="this.innerHTML = this.value;pybridge._add_comment(this.parentNode.parentNode.id, this.value);"></textarea></div></div><div id="2759600106112" class="selected" onclick="pybridge._select_item(this.id)"><section class="section"><h1>Confusion Matrix <span class="timestamp">Fri May 29 26, 22:20:51</span></h1><div class="content">
+<h2>Confusion matrix for Logistic Regression (showing number of instances)</h2><table>
+<tbody><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:center; vertical-align:middle;">Predicted</td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Alcoholic_Liver_Disease</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Cirrhosis</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Fatty_Liver</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Hepatitis_B</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Hepatitis_C</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Normal</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">∑</td>
+</tr><tr><td style="color:black; background:transparent; text-align:center; vertical-align:bottom;">Actual</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Alcoholic_Liver_Disease</td>
+<td style="color:#000000; background:#efeffb; text-align:right; vertical-align:middle;">1336</td>
+<td style="color:#000000; background:#fdf7f7; text-align:right; vertical-align:middle;">78</td>
+<td style="color:#000000; background:#fbefef; text-align:right; vertical-align:middle;">168</td>
+<td style="color:#000000; background:#fef8f8; text-align:right; vertical-align:middle;">62</td>
+<td style="color:#000000; background:#fcf4f4; text-align:right; vertical-align:middle;">114</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">10</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;768</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Cirrhosis</td>
+<td style="color:#000000; background:#fcf2f2; text-align:right; vertical-align:middle;">122</td>
+<td style="color:#000000; background:#ededfb; text-align:right; vertical-align:middle;">1381</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">3</td>
+<td style="color:#000000; background:#fdf7f7; text-align:right; vertical-align:middle;">74</td>
+<td style="color:#000000; background:#fefafa; text-align:right; vertical-align:middle;">49</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">3</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;632</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Fatty_Liver</td>
+<td style="color:#000000; background:#f9e5e5; text-align:right; vertical-align:middle;">261</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">11</td>
+<td style="color:#000000; background:#cecef4; text-align:right; vertical-align:middle;">4034</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">1</td>
+<td style="color:#000000; background:#fdf7f7; text-align:right; vertical-align:middle;">72</td>
+<td style="color:#000000; background:#f4cece; text-align:right; vertical-align:middle;">517</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">4&nbsp;896</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Hepatitis_B</td>
+<td style="color:#000000; background:#fdf5f5; text-align:right; vertical-align:middle;">89</td>
+<td style="color:#000000; background:#fefafa; text-align:right; vertical-align:middle;">45</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">7</td>
+<td style="color:#000000; background:#f7f7fd; text-align:right; vertical-align:middle;">639</td>
+<td style="color:#000000; background:#f8e2e2; text-align:right; vertical-align:middle;">307</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">1</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;088</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Hepatitis_C</td>
+<td style="color:#000000; background:#fdf5f5; text-align:right; vertical-align:middle;">90</td>
+<td style="color:#000000; background:#fefcfc; text-align:right; vertical-align:middle;">23</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">16</td>
+<td style="color:#000000; background:#fbeded; text-align:right; vertical-align:middle;">180</td>
+<td style="color:#000000; background:#f8f8fe; text-align:right; vertical-align:middle;">507</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">816</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">Normal</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">1</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0</td>
+<td style="color:#000000; background:#f9e5e5; text-align:right; vertical-align:middle;">275</td>
+<td style="color:#000000; background:transparent; text-align:right; vertical-align:middle;">0</td>
+<td style="color:#000000; background:#fffdfd; text-align:right; vertical-align:middle;">1</td>
+<td style="color:#000000; background:#d8d8f6; text-align:right; vertical-align:middle;">3123</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">3&nbsp;400</td>
+</tr><tr><td style="color:black; background:transparent; text-align:left; vertical-align:middle;"></td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">∑</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;899</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;538</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">4&nbsp;503</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">956</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">1&nbsp;050</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">3&nbsp;654</td>
+<td style="color:black; background:transparent; font-weight: bold; text-align:right; vertical-align:middle;">13&nbsp;600</td>
+</tr></tbody></table></div></section>
+
+<div class="textwrapper"><textarea placeholder="Write a comment..." oninput="this.innerHTML = this.value;pybridge._add_comment(this.parentNode.parentNode.id, this.value);"></textarea></div></div></body></html>

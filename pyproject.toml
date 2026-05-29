@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ldc"
-version = "1.6.5"
+version = "1.7.0"
 description = "Experimental machine learning study for liver disease classification using Orange3 & Python"
 requires-python = ">=3.10"
 
@@ -25,7 +25,7 @@ dependencies = [
 liver = "liver.cli:main"
 
 [tool.bumpversion]
-current_version = "1.6.5"
+current_version = "1.7.0"
 commit = true
 tag = true
 
