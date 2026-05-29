@@ -4,8 +4,8 @@ from pathlib import Path
 from loguru import logger
 from Orange.data import Table
 
-from .utils import root
 from .cli import AVAILABLE_CONFIGS
+from .utils import root
 
 DATASETS_PATH: Path = root("datasets")
 DATASETS: dict[str, Path] = {

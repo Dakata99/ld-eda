@@ -38,6 +38,9 @@ TOP_6: int = 6
 TOP_20: int = 20
 TOP_N: int = TOP_20
 
+ROUND_TO_3: int = 3
+ROUND_TO_N_DIGITS: int = ROUND_TO_3
+
 INDEX_TEMPLATE: str = "index.html"
 LEARNER_TEMPLATE: str = "learner.html"
 
@@ -78,7 +81,7 @@ def heatmap(df: pd.DataFrame):
 				x=columns,
 				y=df.index.tolist(),
 				colorscale="Viridis",
-				text=[[f"{value:.8f}" for value in row] for row in values],
+				text=[[f"{value:.{ROUND_TO_3}f}" for value in row] for row in values],
 				texttemplate="%{text}",
 				hoverinfo="none",
 				colorbar={"title": "Value"},

@@ -139,9 +139,6 @@
             "tol": [
                 0.001
             ],
-            "max_iter": [
-                1000
-            ],
             "probability": [
                 true
             ]
@@ -164,8 +161,13 @@
             "tol": [
                 0.001
             ],
-            "max_iter": [
-                1000
+            "probability": [
+                true
+            ]
+        },
+        {
+            "kernel": [
+                "poly"
             ],
             "probability": [
                 true
